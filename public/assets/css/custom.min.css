@@ -1,0 +1,43 @@
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #adadad;
+    border-radius: 5px;
+}
+
+/* ::-webkit-scrollbar-thumb:hover {
+    background: #818181;
+}
+
+@keyframes floatUpDown {
+    0%,
+    100% {
+        transform: translateY(+10px);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+#timerhead {
+    transition: transform 0.5s ease-in-out;
+    animation: floatUpDown 2.5s infinite;
+} */
+
+@keyframes zoomInOut {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+
+.ani-breath {
+    transition: transform 0.5s ease-in-out;
+    animation: zoomInOut 2s infinite;
+}

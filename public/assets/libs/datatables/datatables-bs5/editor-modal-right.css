@@ -1,0 +1,29 @@
+/* ---Sliding from right to left modal---- */
+
+.modal.DTED.fade.show .modal-dialog {
+    right: 0 !important;
+    transform: translateX(-50%);
+}
+
+.modal.DTED .modal-content {
+    height: 100%;
+    overflow: auto;
+    border-radius: 0;
+}
+
+.modal.DTED .modal-dialog {
+    position: fixed;
+    margin: auto;
+    height: 100%;
+    width: 40%;
+    transform: translate3d(0%, 0, 0);
+}
+
+.modal.DTED.fade.show .modal-dialog {
+    transform: translateX(0%);
+}
+
+.modal.DTED.fade .modal-dialog {
+    right: -320px;
+    transition: opacity 0.3s linear, right 0.3s ease-out;
+}

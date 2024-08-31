@@ -1,0 +1,30 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "nodemon nodeServer.js"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "axios": "^1.6.4",
+        "bootstrap": "^5.2.3",
+        "laravel-vite-plugin": "^1.0.0",
+        "sass": "^1.56.1",
+        "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "express": "^4.19.2",
+        "nodemon": "^3.1.4",
+        "socket.io": "^4.7.5"
+    },
+    "name": "rolespermission",
+    "description": "composer install php artisan migrate --seed || php artisan migrate:refresh --seed",
+    "version": "1.0.0",
+    "main": "nodeServer.js",
+    "directories": {
+        "test": "tests"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
