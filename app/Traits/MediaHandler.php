@@ -12,7 +12,6 @@ trait MediaHandler
 {
     public function uploadAvatarImage($file): Media
     {
-        dd($file);
         return MediaUploader::fromSource($file)
             ->toDisk(config('filesystems.default'))
             ->toDirectory('bankbook')
@@ -28,5 +27,13 @@ trait MediaHandler
     //         ->useHashForFilename()
     //         ->upload();
     // }
+    public function uploadLanguageSvg($file): Media
+    {
+        return MediaUploader::fromSource($file)
+            ->toDisk(config('filesystems.default'))
+            ->toDirectory('svg')
+            ->useHashForFilename()
+            ->upload();
+    }
 
 }

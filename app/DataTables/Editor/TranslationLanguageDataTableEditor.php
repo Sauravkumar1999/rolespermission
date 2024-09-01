@@ -6,6 +6,7 @@ use App\Models\TranslationLanguage;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\DataTables\DataTablesEditor;
+use Illuminate\Http\Request as HttpRequest;
 
 class TranslationLanguageDataTableEditor extends DataTablesEditor
 {
@@ -19,7 +20,6 @@ class TranslationLanguageDataTableEditor extends DataTablesEditor
         return [
             'lang_name'         => 'required|string',
             'slug'              => 'required|string',
-            'is_default'        => 'boolean',
         ];
     }
 
@@ -31,7 +31,6 @@ class TranslationLanguageDataTableEditor extends DataTablesEditor
         return [
             'lang_name'         => 'required|string',
             'slug'              => 'required|string',
-            'is_default'        => 'boolean',
         ];
     }
 
@@ -58,5 +57,45 @@ class TranslationLanguageDataTableEditor extends DataTablesEditor
     public function saved(Model $model, array $data): Model
     {
         return $model;
+    }
+
+    public function upload(HttpRequest $request)
+    {
+        $file = $request->file('upload');
+        $field = $request->input('uploadField');
+        try {
+            if ($request->hasFile('upload')) {
+                $file = $request->file('upload');
+                $imageName = time() . $file->getClientOriginalName();
+                $file->move(public_path('uploads/' . $field), $imageName);
+
+                return response()->json([
+                    'action' => 'upload', 'data'   => [],
+                    'files'  => [
+                        'files' => [
+                            'file_name' => [
+                                'filename'      => 'file_name',
+                                'original_name' => 'original_name',
+                                'url'           => '/uploads/' . $field . '/' . $imageName,
+                            ],
+                        ],
+                    ],
+                    'upload' => [
+                        'id' => '/uploads/' . $field . '/' . $imageName,
+                    ],
+                ]);
+            }
+        } catch (\Exception $exception) {
+            return response()->json([
+                'action'      => $this->action,
+                'data'        => [],
+                'fieldErrors' => [
+                    [
+                        'name'   => $field,
+                        'status' => str_replace('upload', $field, $exception->getMessage()),
+                    ],
+                ],
+            ]);
+        }
     }
 }
