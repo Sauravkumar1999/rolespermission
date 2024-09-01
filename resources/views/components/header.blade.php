@@ -18,6 +18,7 @@
                 </span>
             </div>
             <div class="d-flex align-items-center">
+                @php($local = App::getLocale())
                 <div class="dropdown ms-1 topbar-head-dropdown header-item">
                     <button type="button" class="btn" id="page-header-flag" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -26,11 +27,10 @@
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end" id="page-header-flag-dropdown">
-                        @php($local = App::getLocale())
                         @foreach (App\Models\TranslationLanguage::all() as $list)
                             <a href="{{ route('translations.change', $list->slug ) }}"
                                 class="dropdown-item notify-item language py-2 @if($local === $list->slug) active @endif" data-lang="{{ $list->slug }}" title="{{ $list->lang_name }}">
-                                <img src="/assets/images/flags/ind.svg" alt="user-image" class="me-2 rounded"
+                                <img src="{{ asset($list->svg)}}" alt="user-image" class="me-2 rounded"
                                     height="18">
                                 <span class="align-middle">{{ $list->lang_name }}</span>
                             </a>

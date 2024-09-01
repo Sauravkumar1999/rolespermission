@@ -25,11 +25,11 @@ class PermissionDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
+            ->addColumn('actions', function ($data) {
                 return view('dashboard.users.partials._action_button_permission', ['data' => $data])->render();
             })
             ->setRowId('id')
-            ->rawColumns(['action']);
+            ->rawColumns(['actions']);
     }
 
     /**
@@ -53,11 +53,17 @@ class PermissionDataTable extends DataTable
                 "<'row'<'col-sm-12'tr>>" .
                 "<'row'<'col-sm-12 col-md-12 d-flex align-item-center justify-content-end'p>>")
             // ->dom('Bfrtip')
-            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search...'])
+            ->language([
+                "search" => "",
+                "lengthMenu" => "_MENU_",
+                "searchPlaceholder" => 'Search...',
+                "processing" => '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>'
+            ])
             ->orderBy(0, 'ASC')
             ->initComplete('function() {
                 $(".dataTables_length label, #user-table_filter label").addClass("mb-0");
                 $(".dt-buttons .dt-button").removeClass("dt-button");
+                $("#permission-table_processing").removeClass("card");
             }')
             ->orderBy(1)
             ->pageLength(10)
@@ -89,18 +95,11 @@ class PermissionDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::computed('DT_RowIndex') // Computed column for row index
-                ->title('#')
-                ->searchable(false)
-                ->orderable(false)
-                ->className('text-center'),
+            Column::make('id')->title(trans(trans('translation.id')))->searchable(false)->orderable(false)->className('text-center'),
             Column::make('name'),
             Column::make('display_name'),
             Column::make('desc'),
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->className('text-center'),
+            Column::make('actions')->title(trans('translation.actions'))->exportable(false)->printable(false)->className('text-center'),
         ];
     }
 

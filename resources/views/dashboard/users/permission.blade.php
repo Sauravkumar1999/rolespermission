@@ -29,55 +29,55 @@
     {{ $dataTable->scripts() }}
     <script>
         $(document).ready(function() {
-            let permissionEditor = window.LaravelDataTables["permission-table-editor"];
-            let permissionTable = window.LaravelDataTables['permission-table'];
+            let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
+            let table = window.LaravelDataTables['{!! $dataTable->getTableAttribute('id') !!}'];
 
             // Run function on table draw
-            permissionTable.on('draw', function() {
+            table.on('draw', function() {
                 console.log('draw');
             });
 
-            permissionTable.on('click', 'button.editor-delete', function(e) {
+            table.on('click', 'button.editor-delete', function(e) {
                 e.preventDefault();
-                permissionEditor.remove(e.target.closest('tr'), {
+                tableEditor.remove(e.target.closest('tr'), {
                     title: 'Delete this data',
                     message: 'Sure to delete this data',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                permissionEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Confirm',
                             action: function() {
-                                permissionEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ],
                 });
             });
 
-            permissionTable.on('click', 'button.editor-edit', function(e) {
+            table.on('click', 'button.editor-edit', function(e) {
                 var tdElements = e.target.closest('tr');
-                permissionEditor.edit(tdElements, {
+                tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                permissionEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Submit',
                             action: function() {
-                                permissionEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ]
                 });
             });
-            permissionTable.on('click', 'button.editor-permission', function(e) {
+            table.on('click', 'button.editor-permission', function(e) {
                 let tdElements = e.target.closest('tr');
                 let userId = $(this).data('id');
 
@@ -97,7 +97,7 @@
                 $('#modal-permission').modal('show');
             });
 
-            permissionEditor.on('submitSuccess', function(e, json, data) {
+            tableEditor.on('submitSuccess', function(e, json, data) {
                 if (json.action === 'remove') {
                     console.log(e, json, data);
                 }

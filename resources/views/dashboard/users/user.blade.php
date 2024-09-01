@@ -61,58 +61,58 @@
     {{ $dataTable->scripts() }}
     <script>
         $(document).ready(function() {
-            let userEditor = window.LaravelDataTables["user-table-editor"];
-            let userTable = window.LaravelDataTables['user-table'];
+            let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
+            let table = window.LaravelDataTables['{!! $dataTable->getTableAttribute('id') !!}'];
 
             // setTimeout(() => {
-            //     userTable.draw()
+            //     table.draw()
             // }, 20000);
-            userTable.on('draw', function() {
+            table.on('draw', function() {
                 console.log('draw');
             });
 
-            userTable.on('click', 'button.editor-delete', function(e) {
+            table.on('click', 'button.editor-delete', function(e) {
                 e.preventDefault();
-                userEditor.remove(e.target.closest('tr'), {
+                tableEditor.remove(e.target.closest('tr'), {
                     title: 'Delete this data',
                     message: 'Sure to delete this data',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                userEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Confirm',
                             action: function() {
-                                userEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ],
                 });
             });
 
-            userTable.on('click', 'button.editor-edit', function(e) {
+            table.on('click', 'button.editor-edit', function(e) {
                 var tdElements = e.target.closest('tr');
-                userEditor.edit(tdElements, {
+                tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                userEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Submit',
                             action: function() {
-                                userEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ]
                 });
             });
 
-            userTable.on('click', 'button.editor-permission', function(e) {
+            table.on('click', 'button.editor-permission', function(e) {
                 let tdElements = $(e.target).closest('tr');
                 $('#permission-user-info img').attr('src', tdElements.find('td:eq(5)').find('img').attr(
                     'src'));
@@ -140,11 +140,14 @@
                     });
             });
 
-            userEditor.on('submitSuccess', function(e, json, data) {
+            tableEditor.on('submitSuccess', function(e, json, data) {
                 if (json.action === 'remove') {
                     console.log(e, json, data);
                 }
             });
+            Datatablenotifications(tableEditor, 'create', 'Data created successfully');
+            Datatablenotifications(tableEditor, 'edit', 'Data Updated successfully');
+            Datatablenotifications(tableEditor, 'remove', 'Data Deleted successfully');
         });
     </script>
     <script>

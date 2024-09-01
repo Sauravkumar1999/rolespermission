@@ -7,7 +7,7 @@
                 <img src="/assets/images/logo-sm.png" height="22">
             </span>
             <span class="logo-lg">
-                <img src="/assets/images/logo-dark.png" height="17">
+                <img src="/assets/images/s-logo.png" height="50">
             </span>
         </a>
         <!-- Light Logo-->
@@ -16,7 +16,7 @@
                 <img src="/assets/images/logo-sm.png" height="22">
             </span>
             <span class="logo-lg">
-                <img src="/assets/images/logo-light.png" height="17">
+                <img src="/assets/images/s-logo.png" height="50">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
@@ -34,7 +34,7 @@
                 <li class="menu-title"><span data-key="t-menu">Pages</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ Request::segment(1) === 'home' ? ' active' : '' }}" href="/home">
-                        <i class="ri-dashboard-2-line ani-breath"></i> <span data-key="t-dashboard">{{ trans('home.dashboard') }}</span>
+                        <i class="ri-dashboard-2-line ani-breath"></i> <span data-key="t-dashboard">{{ trans('dashboard.dashboard') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">

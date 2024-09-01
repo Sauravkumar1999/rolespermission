@@ -62,7 +62,12 @@ class TranslationLanguageDataTable extends DataTable
             ->dom("<'row m-2'<'col-sm-12 col-md-4 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-8 d-flex align-items-center justify-content-end'lB>>" .
                 "<'row'<'col-sm-12'tr>>" .
                 "<'row'<'col-sm-12 col-md-12 d-flex align-item-center justify-content-end'p>>")
-            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search...'])
+                ->language([
+                    "search" => "",
+                    "lengthMenu" => "_MENU_",
+                    "searchPlaceholder" => 'Search...',
+                    "processing" => '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>'
+                ])
             ->orderBy(0, 'ASC')
             ->pageLength(10)
             ->columnDefs([
@@ -79,6 +84,7 @@ class TranslationLanguageDataTable extends DataTable
             ->initComplete('function() {
                         $(".dataTables_length label, #user-table_filter label").addClass("mb-0");
                         $(".dt-buttons .dt-button").removeClass("dt-button");
+                        $("#translationlanguage-table_processing").removeClass("card");
                      }')
             ->editor(
                 Editor::make()->fields([
@@ -116,12 +122,11 @@ class TranslationLanguageDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title('ID'),
             Column::make('lang_name')->title('Lanhuage name'),
             Column::make('slug')->title('slug'),
             Column::make('svg')->title('Svg'),
             Column::make('created_at')->title('created-at'),
-            Column::make('actions')->title('action'),
+            Column::make('actions')->title(trans('translation.actions'))->exportable(false)->printable(false)->className('text-center'),
         ];
     }
 

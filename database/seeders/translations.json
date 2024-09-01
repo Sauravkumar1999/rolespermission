@@ -5,7 +5,10 @@
         {"key": "group", "text": {"en": "Group", "hn": "समूह"}},
         {"key": "key", "text": {"en": "Key", "hn": "कुंजी"}},
         {"key": "text", "text": {"en": "Text", "hn": "पाठ"}},
-        {"key": "action", "text": {"en": "Actions", "hn": "क्रियाएँ"}}
+        {"key": "actions", "text": {"en": "Actions", "hn": "क्रियाएँ"}},
+        {"key": "language-name", "text": {"en": "Language name", "hn": "भाषा का नाम"}},
+        {"key": "svg", "text": {"en": "Svg", "hn": "Svg"}},
+        {"key": "created-at", "text": {"en": "Created at", "hn": "बनाया गया"}}
     ],
     "user": [
         {"key": "user", "text": {"en": "User", "hn": "उपयोगकर्ता"}}

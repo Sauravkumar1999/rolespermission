@@ -58,55 +58,55 @@
     {{ $dataTable->scripts() }}
     <script>
         $(document).ready(function() {
-            let roleEditor = window.LaravelDataTables["role-table-editor"];
-            let roleTable = window.LaravelDataTables['role-table'];
+            let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
+            let table = window.LaravelDataTables['{!! $dataTable->getTableAttribute('id') !!}'];
 
             // Run function on table draw
-            roleTable.on('draw', function() {
+            table.on('draw', function() {
                 console.log('draw');
             });
 
-            roleTable.on('click', 'button.editor-delete', function(e) {
+            table.on('click', 'button.editor-delete', function(e) {
                 e.preventDefault();
-                roleEditor.remove(e.target.closest('tr'), {
+                tableEditor.remove(e.target.closest('tr'), {
                     title: 'Delete this data',
                     message: 'Sure to delete this data',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                roleEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Confirm',
                             action: function() {
-                                roleEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ],
                 });
             });
 
-            roleTable.on('click', 'button.editor-edit', function(e) {
+            table.on('click', 'button.editor-edit', function(e) {
                 var tdElements = e.target.closest('tr');
-                roleEditor.edit(tdElements, {
+                tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                roleEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Submit',
                             action: function() {
-                                roleEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ]
                 });
             });
-            roleTable.on('click', 'button.editor-permission', function(e) {
+            table.on('click', 'button.editor-permission', function(e) {
                 let tdElements = e.target.closest('tr');
                 let roleId = $(this).data('id');
 
@@ -125,11 +125,14 @@
                 })
             });
 
-            roleEditor.on('submitSuccess', function(e, json, data) {
+            tableEditor.on('submitSuccess', function(e, json, data) {
                 if (json.action === 'remove') {
                     console.log(e, json, data);
                 }
             });
+            Datatablenotifications(tableEditor,'create','Data created successfully');
+            Datatablenotifications(tableEditor,'edit','Data Updated successfully');
+            Datatablenotifications(tableEditor,'remove','Data Deleted successfully');
         });
     </script>
     <script>

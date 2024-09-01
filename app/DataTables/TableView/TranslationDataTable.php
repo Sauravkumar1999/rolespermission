@@ -69,8 +69,7 @@ class TranslationDataTable extends DataTable
                 "search" => "",
                 "lengthMenu" => "_MENU_",
                 "searchPlaceholder" => 'Search...',
-                "processing" => '<div class="spinner-border text-primary" role="status">
-                                  <span class="sr-only">Loading...</span></div>'
+                "processing" => '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>'
             ])
             ->pageLength(10)
             ->columnDefs([
@@ -118,11 +117,10 @@ class TranslationDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title(trans('translation.id')),
             Column::make('group')->title(trans('translation.group')),
             Column::make('key')->title(trans('translation.key')),
             Column::make('text')->title(trans('translation.text')),
-            Column::make('actions')->title(trans('translation.action')),
+            Column::make('actions')->title(trans('translation.actions'))->exportable(false)->printable(false)->className('text-center'),
         ];
     }
 
