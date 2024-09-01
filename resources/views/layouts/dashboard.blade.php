@@ -66,27 +66,11 @@
     <script src="/assets/libs/node-waves/waves.min.js"></script>
     <script src="/assets/libs/feather-icons/feather.min.js"></script>
     <script src="/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
-    <script src="/assets/js/pages/notifications.init.js"></script>
+    <script src="/assets/libs/toastify/toastify-js.js"></script>
+    {{-- ----------end --}}
     <script src="/assets/js/app.min.js"></script>
     <script src="/assets/js/custom/dashboard.js"></script>
-    <script>
-        // fetch("{{ route('getSessionExpiration') }}").then(data => data.json()).then(re => {
-        //     console.log(re);
-        // })
-    </script>
-    {{-- <script src="assets/js/plugins.js"></script> --}}
     @stack('footer')
-    @if (session()->has('success'))
-        <script>
-            Toastify({
-                text: "{{ session()->get('success') }}",
-                gravity: "top",
-                position: "right",
-                duration: 3000,
-                close: true
-            }).showToast();
-        </script>
-    @endif
 </body>
 
 </html>

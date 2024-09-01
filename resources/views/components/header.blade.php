@@ -71,37 +71,37 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <h6 class="dropdown-header">Welcome {{ auth()->user()->name }} !</h6>
+                        <h6 class="dropdown-header">{{ trans('dashboard.welcome') }} {{ auth()->user()->name }} !</h6>
                         <a class="dropdown-item" href="pages-profile.html">
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Profile</span>
+                            <span class="align-middle">{{ trans('dashboard.profile') }}</span>
                         </a>
                         <a class="dropdown-item" href="apps-chat.html">
                             <i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Messages</span>
+                            <span class="align-middle">{{ trans('dashboard.messages') }}</span>
                         </a>
                         <a class="dropdown-item" href="apps-tasks-kanban.html">
                             <i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Taskboard</span>
+                            <span class="align-middle">{{ trans('dashboard.taskboard') }}</span>
                         </a>
                         <a class="dropdown-item" href="pages-faqs.html">
                             <i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Help</span>
+                            <span class="align-middle">{{ trans('dashboard.help') }}</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="pages-profile-settings.html">
                             <span class="badge bg-success-subtle text-success mt-1 float-end">New</span>
                             <i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Settings</span>
+                            <span class="align-middle">{{ trans('dashboard.settings') }}</span>
                         </a>
                         <a class="dropdown-item" href="auth-lockscreen-basic.html">
                             <i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle">Lock screen</span>
+                            <span class="align-middle">{{ trans('dashboard.lock-screen') }} </span>
                         </a>
                         <a class="dropdown-item" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
-                            <span class="align-middle" data-key="t-logout">Logout</span>
+                            <span class="align-middle" data-key="t-logout">{{ trans('dashboard.logout') }}</span>
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf

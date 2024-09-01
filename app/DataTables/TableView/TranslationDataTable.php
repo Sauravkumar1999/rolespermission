@@ -46,7 +46,7 @@ class TranslationDataTable extends DataTable
      */
     public function query(LanguageLine $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->orderBy('group');
     }
 
     /**
@@ -65,8 +65,13 @@ class TranslationDataTable extends DataTable
             ->dom("<'row m-2'<'col-sm-12 col-md-4 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-8 d-flex align-items-center justify-content-end'lB>>" .
                 "<'row'<'col-sm-12'tr>>" .
                 "<'row'<'col-sm-12 col-md-12 d-flex align-item-center justify-content-end'p>>")
-            ->language(["search" => "", "lengthMenu" => "_MENU_", "searchPlaceholder" => 'Search...'])
-            ->orderBy(0, 'ASC')
+            ->language([
+                "search" => "",
+                "lengthMenu" => "_MENU_",
+                "searchPlaceholder" => 'Search...',
+                "processing" => '<div class="spinner-border text-primary" role="status">
+                                  <span class="sr-only">Loading...</span></div>'
+            ])
             ->pageLength(10)
             ->columnDefs([
                 'className' => 'dt-center',
@@ -82,6 +87,7 @@ class TranslationDataTable extends DataTable
             ->initComplete('function() {
                 $(".dataTables_length label, #user-table_filter label").addClass("mb-0");
                 $(".dt-buttons .dt-button").removeClass("dt-button");
+                $("#translation-table_processing").removeClass("card");
              }')->editor(
                 Editor::make()->fields([
                     Select::make('group')->options([
@@ -112,11 +118,11 @@ class TranslationDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title('ID'),
-            Column::make('group')->title('Group'),
-            Column::make('key')->title('Key'),
-            Column::make('text')->title('Text'),
-            Column::make('actions')->title('Actions'),
+            Column::make('id')->title(trans('translation.id')),
+            Column::make('group')->title(trans('translation.group')),
+            Column::make('key')->title(trans('translation.key')),
+            Column::make('text')->title(trans('translation.text')),
+            Column::make('actions')->title(trans('translation.action')),
         ];
     }
 

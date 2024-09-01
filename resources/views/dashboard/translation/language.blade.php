@@ -30,49 +30,53 @@
     {{ $dataTable->scripts() }}
     <script>
         $(document).ready(function() {
-            let languageEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
-            let languageTable = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}"];
+            let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
+            let table = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}"];
 
-            languageTable.on('click', 'button.editor-delete', function(e) {
+            table.on('click', 'button.editor-delete', function(e) {
                 e.preventDefault();
-                languageEditor.remove(e.target.closest('tr'), {
+                tableEditor.remove(e.target.closest('tr'), {
                     title: 'Delete this data',
                     message: 'Sure to delete this data',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                languageEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Confirm',
                             action: function() {
-                                languageEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ],
                 });
             });
 
-            languageTable.on('click', 'button.editor-edit', function(e) {
+            table.on('click', 'button.editor-edit', function(e) {
                 var tdElements = e.target.closest('tr');
-                languageEditor.edit(tdElements, {
+                tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
                             text: 'Close',
                             action: function() {
-                                languageEditor.close();
+                                tableEditor.close();
                             }
                         },
                         {
                             text: 'Submit',
                             action: function() {
-                                languageEditor.submit();
+                                tableEditor.submit();
                             }
                         }
                     ]
                 });
             });
+
+            Datatablenotifications(tableEditor,'create','Data created successfully');
+            Datatablenotifications(tableEditor,'edit','Data Updated successfully');
+            Datatablenotifications(tableEditor,'remove','Data Deleted successfully');
         });
     </script>
 @endpush

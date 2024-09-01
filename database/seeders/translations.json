@@ -1,6 +1,11 @@
 {
     "translation": [
-        {"key": "translation", "text": {"en": "translation", "hn": "अनुवाद"}}
+        {"key": "translation", "text": {"en": "translation", "hn": "अनुवाद"}},
+        {"key": "id", "text": {"en": "ID", "hn": "आईडी"}},
+        {"key": "group", "text": {"en": "Group", "hn": "समूह"}},
+        {"key": "key", "text": {"en": "Key", "hn": "कुंजी"}},
+        {"key": "text", "text": {"en": "Text", "hn": "पाठ"}},
+        {"key": "action", "text": {"en": "Actions", "hn": "क्रियाएँ"}}
     ],
     "user": [
         {"key": "user", "text": {"en": "User", "hn": "उपयोगकर्ता"}}
@@ -23,7 +28,15 @@
     "setting": [
         {"key": "setting", "text": {"en": "Setting", "hn": "सेटिंग"}}
     ],
-    "dashboard":[{
-        "key": "dashboard", "text": {"en": "Dashboard", "hn": "डैशबोर्ड"}
-        }]
+    "dashboard":[
+        {"key": "dashboard", "text": {"en": "Dashboard", "hn": "डैशबोर्ड"}},
+        {"key": "welcome", "text": {"en": "Welcome", "hn": "स्वागत है"}},
+        {"key": "profile", "text": {"en": "Profile", "hn": "प्रोफ़ाइल"}},
+        {"key": "messages", "text": {"en": "Messages", "hn": "संदेश"}},
+        {"key": "taskboard", "text": {"en": "Taskboard", "hn": "टास्कबोर्ड"}},
+        {"key": "help", "text": {"en": "Help", "hn": "सहायता"}},
+        {"key": "setting", "text": {"en": "Setting", "hn": "सेटिंग"}},
+        {"key": "lock-screen", "text": {"en": "Lock screen ", "hn": "लॉक स्क्रीन"}},
+        {"key": "logout", "text": {"en": "Logout", "hn": "लॉगआउट"}}
+    ]
 }
