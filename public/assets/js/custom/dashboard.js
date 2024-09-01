@@ -31,3 +31,15 @@
     }
     updateClock();
 })();
+function Datatablenotifications(editor, event , message) {
+    editor.on(event, function (e, type, action) {
+        Toastify({
+            text: message,
+            gravity: "top",
+            position: "right",
+            duration: 3000,
+            close: true,
+            className: "bg-success"
+        }).showToast();
+    });
+}
