@@ -65,7 +65,7 @@ class TranslationLanguageDataTable extends DataTable
                 ->language([
                     "search" => "",
                     "lengthMenu" => "_MENU_",
-                    "searchPlaceholder" => 'Search...',
+                    "searchPlaceholder" => trans('general.search'),
                     "processing" => '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>'
                 ])
             ->orderBy(0, 'ASC')

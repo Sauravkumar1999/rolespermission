@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body px-0">
                     {!! $dataTable->table() !!}
                 </div>
             </div>

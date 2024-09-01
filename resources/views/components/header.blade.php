@@ -23,7 +23,8 @@
                     <button type="button" class="btn" id="page-header-flag" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                            <img class="rounded" src="/assets/images/flags/ind.svg" alt="Header Avatar" height="20">
+                            @php($lang =getLanguage())
+                            <img class="rounded" src="@if ($lang){{ $lang->getSvg() }} @else '/assets/images/flags/ind.svg' @endif" alt="Header Avatar" height="20">
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end" id="page-header-flag-dropdown">

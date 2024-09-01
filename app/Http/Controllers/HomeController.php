@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home',['pageTitle'=> trans('home.home')]);
+        return view('home',['pageTitle'=> trans('dashboard.dashboard')]);
     }
     public function getSessionExpiration()
     {

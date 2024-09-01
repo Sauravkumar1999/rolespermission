@@ -22,3 +22,11 @@ if (!function_exists('default_language')) {
         return $def_lang ? $def_lang->slug : null;
     }
 }
+
+if (!function_exists('getLanguage')) {
+    function getLanguage()
+    {
+        $def_lang = TranslationLanguage::where('slug',app()->getLocale())->first();
+        return $def_lang ? $def_lang : null;
+    }
+}

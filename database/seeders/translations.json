@@ -22,8 +22,15 @@
     "schedule": [
         {"key": "schedule", "text": {"en": "Schedule", "hn": "अनुसूची"}}
     ],
-    "home": [
-        {"key": "home", "text": {"en": "Home", "hn": "घर"}}
+    "general": [
+        {"key": "create", "text": {"en": "Create", "hn": "बनाएँ"}},
+        {"key": "edit", "text": {"en": "Edit", "hn": "संपादित करें"}},
+        {"key": "delete", "text": {"en": "Delete", "hn": "हटाएँ"}},
+        {"key": "next", "text": {"en": "Next", "hn": "अगला"}},
+        {"key": "previous", "text": {"en": "Previous", "hn": "पिछला"}},
+        {"key": "search", "text": {"en": "Search...", "hn": "खोज..."}},
+        {"key": "page", "text": {"en": "Page", "hn": "पृष्ठ"}},
+        {"key": "other", "text": {"en": "Other", "hn": "अन्य"}}
     ],
     "chat": [
         {"key": "chat", "text": {"en": "Chat", "hn": "बात करना"}}
