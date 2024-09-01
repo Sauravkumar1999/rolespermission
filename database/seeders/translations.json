@@ -1,0 +1,29 @@
+{
+    "translation": [
+        {"key": "translation", "text": {"en": "translation", "hn": "अनुवाद"}}
+    ],
+    "user": [
+        {"key": "user", "text": {"en": "User", "hn": "उपयोगकर्ता"}}
+    ],
+    "role": [
+        {"key": "role", "text": {"en": "Role", "hn": "भूमिका"}}
+    ],
+    "permission": [
+        {"key": "permission", "text": {"en": "Permission", "hn": "अनुमति"}}
+    ],
+    "schedule": [
+        {"key": "schedule", "text": {"en": "Schedule", "hn": "अनुसूची"}}
+    ],
+    "home": [
+        {"key": "home", "text": {"en": "Home", "hn": "घर"}}
+    ],
+    "chat": [
+        {"key": "chat", "text": {"en": "Chat", "hn": "बात करना"}}
+    ],
+    "setting": [
+        {"key": "setting", "text": {"en": "Setting", "hn": "सेटिंग"}}
+    ],
+    "dashboard":[{
+        "key": "dashboard", "text": {"en": "Dashboard", "hn": "डैशबोर्ड"}
+        }]
+}

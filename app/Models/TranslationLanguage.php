@@ -13,6 +13,7 @@ class TranslationLanguage extends Model
     protected $fillable=[
         'lang_name',
         'slug',
+        'svg',
         'is_default',
     ];
 

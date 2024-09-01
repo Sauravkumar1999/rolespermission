@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('lang_name')->nullable();
             $table->string('slug')->nullable();
+            $table->string('svg')->nullable();
             $table->string('is_default')->default(0);
             $table->timestamps();
         });
