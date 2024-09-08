@@ -95,21 +95,21 @@ class UserDataTable extends DataTable
                     Text::make('name')->label('Name')->attr('placeholder', 'Enter Full Name'),
                     Text::make('email')->label('Email')->attr('placeholder', 'exaplain@mail.com'),
                     Text::make('phone')->label('Phone')->attr('placeholder', 'Enter Phone number'),
-                    Text::make('password')->label('Password')->attr('placeholder', '********'),
+                    // Text::make('password')->label('Password')->attr('placeholder', '********'),
+                    Text::make('password')->label(trans('user.password'))
+                    ->attr('id' , 'password')
+                    ->attr('readonly' , 'readonly')
+                    ->attr('placeholder' , trans('user.password'))
+                    ->attr('disabled' , true)
+                    ->attr('class' , 'password-field'),
                     File::make('profile')->label('profile')
                         ->display("function (data) {  if(!data.includes('img')) { console.log('yes'); return '<img src=\"'+data+'\" />'; } else { console.log('no'); return data; } }"),
                 ])
                     ->onOpen("function(e, node, action) {
-                    $('.DTE_Action_Create').parent().addClass('modal-lg');
-                    // Replace the password field with custom HTML
-                    var passwordField = $('div.DTE_Field_Name_password');
-
-                    // Attach click event for generate password button
-                    $(document).on('click', '#generate_pass', function() {
-                        var password = Math.random().toString(36).slice(-8);
-                        $('#DTE_Field_password').val(password);
-                    });
-                }")
+                        $('.DTE_Action_Create').parent().addClass('modal-lg');
+                        var passwordField = $('div.DTE_Field_Name_password');
+                        generatePasswordHTML();
+                    }")
                     ->onInitEdit("function(){ console.log('onInitEdit') }")
             )->scrollX(false);
     }

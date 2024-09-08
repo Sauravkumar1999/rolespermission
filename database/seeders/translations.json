@@ -11,7 +11,10 @@
         {"key": "created-at", "text": {"en": "Created at", "hn": "बनाया गया"}}
     ],
     "user": [
-        {"key": "user", "text": {"en": "User", "hn": "उपयोगकर्ता"}}
+        {"key": "user", "text": {"en": "User", "hn": "उपयोगकर्ता"}},
+        {"key": "password", "text": {"en": "Password", "hn": "पासवर्ड"}},
+        {"key": "generate", "text": {"en": "Generate", "hn": "उत्पन्न"}},
+        {"key": "copy", "text": {"en": "Copy", "hn": "प्रतिलिपि"}}
     ],
     "role": [
         {"key": "role", "text": {"en": "Role", "hn": "भूमिका"}}

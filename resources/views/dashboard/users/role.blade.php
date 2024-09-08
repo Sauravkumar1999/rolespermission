@@ -92,18 +92,20 @@
                 tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
-                            text: 'Close',
+                            text: "{{ trans('general.close')}}",
+                            className: 'btn btn-secondary',
                             action: function() {
                                 tableEditor.close();
                             }
                         },
                         {
-                            text: 'Submit',
+                            text: "{{ trans('general.confirm')}}",
+                            className: 'btn btn-danger',
                             action: function() {
                                 tableEditor.submit();
                             }
                         }
-                    ]
+                    ],
                 });
             });
             table.on('click', 'button.editor-permission', function(e) {

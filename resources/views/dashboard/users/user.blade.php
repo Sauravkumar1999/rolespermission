@@ -2,7 +2,7 @@
 @push('header')
     <title>Users</title>
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/datatables.bootstrap5.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/editor-modal-right.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/editor-modal-right.css') }}" /> --}}
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet"
         href="{{ asset('assets/libs/datatables/datatables-checkboxes-jquery/datatables.checkboxes.css') }}" />
@@ -10,6 +10,11 @@
     <style>
         div.DTE div.editor_upload div.cell {
             width: 60%;
+        }
+        .password-field {
+            width: 60%;
+            display: inline-block;
+            margin-right: 25px;
         }
     </style>
 @endpush
@@ -58,18 +63,12 @@
     </script>
     <script type="text/javascript" src="{{ asset('assets/libs/datatables/dt-editor/js/editor.bootstrap5.min.js') }}">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     {{ $dataTable->scripts() }}
     <script>
         $(document).ready(function() {
             let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
             let table = window.LaravelDataTables['{!! $dataTable->getTableAttribute('id') !!}'];
-
-            // setTimeout(() => {
-            //     table.draw()
-            // }, 20000);
-            table.on('draw', function() {
-                console.log('draw');
-            });
 
             table.on('click', 'button.editor-delete', function(e) {
                 e.preventDefault();
@@ -77,13 +76,15 @@
                     title: 'Delete this data',
                     message: 'Sure to delete this data',
                     buttons: [{
-                            text: 'Close',
+                            text: "{{ trans('general.close')}}",
+                            className: 'btn btn-secondary',
                             action: function() {
                                 tableEditor.close();
                             }
                         },
                         {
-                            text: 'Confirm',
+                            text: "{{ trans('general.confirm')}}",
+                            className: 'btn btn-danger',
                             action: function() {
                                 tableEditor.submit();
                             }
@@ -97,18 +98,20 @@
                 tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
-                            text: 'Close',
+                            text: "{{ trans('general.close')}}",
+                            className: 'btn btn-secondary',
                             action: function() {
                                 tableEditor.close();
                             }
                         },
                         {
-                            text: 'Submit',
+                            text: "{{ trans('general.confirm')}}",
+                            className: 'btn btn-danger',
                             action: function() {
                                 tableEditor.submit();
                             }
                         }
-                    ]
+                    ],
                 });
             });
 
@@ -140,14 +143,43 @@
                     });
             });
 
-            tableEditor.on('submitSuccess', function(e, json, data) {
-                if (json.action === 'remove') {
-                    console.log(e, json, data);
-                }
-            });
             Datatablenotifications(tableEditor, 'create', 'Data created successfully');
             Datatablenotifications(tableEditor, 'edit', 'Data Updated successfully');
             Datatablenotifications(tableEditor, 'remove', 'Data Deleted successfully');
+
+            $(document).on('click', '#copy_pwd', function() {
+                const copyText = $(this).data('password');
+                navigator.clipboard.writeText(copyText);
+
+                const titleText = document.documentElement.lang === 'ko' ? '복사됨' : 'Copied';
+
+                $(this).tooltip('dispose').tooltip({
+                    title: titleText,
+                    placement: 'top',
+                    trigger: 'manual'
+                }).tooltip('show');
+
+                setTimeout(() => $(this).tooltip('hide'), 1000);
+            });
+
+            $(document).on('click', function(event) {
+                if (!$(event.target).closest('#copy_pwd').length) {
+                    $('#copy_pwd').tooltip('hide');
+                }
+            });
+
+            $(document).on('click', '#generate_pwd', function() {
+                const password = makeRandomPass(10);
+                $('#password').val(password);
+                $('#copy_pwd').attr({
+                    'data-password': password,
+                    'data-toggle': 'tooltip',
+                    'data-placement': 'top',
+                    'title': document.documentElement.lang === 'ko' ? '복사됨' : 'Copy'
+                });
+            });
+
+
         });
     </script>
     <script>
@@ -222,6 +254,36 @@
                     $(this).html('<span>Save</span>')
                 });
             }
+        }
+
+        function generatePasswordHTML() {
+            $('.add_button').remove();
+            $('.DTE_Field_Name_password .DTE_Field_InputControl').after(function() {
+                let html = `<div class="add_button" style="display: inline-block;">
+                    <button class="btn btn-primary btn-sm p-2" id="generate_pwd" style="margin-right: 10px; ">{{ trans('user.generate') }}</button>
+                    <button class="btn btn-primary btn-sm p-2" id="copy_pwd" data-password="">{{ trans('user.copy') }}</button>
+                </div>`;
+                $(this).append(html);
+            })
+        }
+
+        function makeRandomPass(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            const numbers = '0123456789';
+            const specials = '!@#$%^&*()-_';
+            result += letters.charAt(Math.floor(Math.random() * letters.length));
+            result += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            result += specials.charAt(Math.floor(Math.random() * specials.length));
+            for (var i = 0; i < length - 3; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            result = result.split('').sort(function() {
+                return 0.5 - Math.random()
+            }).join('');
+
+            return result;
         }
     </script>
 @endpush

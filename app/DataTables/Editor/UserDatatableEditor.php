@@ -48,6 +48,16 @@ class UserDatatableEditor extends DataTablesEditor
      */
     public function removeRules(Model $model): array
     {
+        if ($model->setting) {
+            $model->setting->delete();
+        }
+
+        if ($model->profile) {
+            $profilePath = public_path($model->profile);
+            if (file_exists($profilePath)) {
+                unlink($profilePath);
+            }
+        }
         return [];
     }
 
