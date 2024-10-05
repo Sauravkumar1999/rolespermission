@@ -12,6 +12,8 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields\File;
 use Yajra\DataTables\Html\Editor\Fields\Number;
+use Yajra\DataTables\Html\Editor\Fields\Radio;
+use Yajra\DataTables\Html\Editor\Fields\Select;
 use Yajra\DataTables\Html\Editor\Fields\Text;
 use Yajra\DataTables\Services\DataTable;
 
@@ -33,11 +35,43 @@ class UserDataTable extends DataTable
             ->addColumn('profile', function ($data) {
                 return '<img src="' . $data->profile . '" alt="Profile" class="avatar-xs rounded-circle" />';
             })
+            ->addColumn('role', function ($data) {
+                $role = $data->roles;
+                return $role->first()?->display_name ?? 'N/A';
+            })
+            ->filterColumn('role', function ($query, $key) {
+                if ($key === 'all roles') {
+                    return;
+                }
+                return $query->whereHas('roles', function ($q) use ($key) {
+                    $q->whereRaw('LOWER(display_name) LIKE ?', [strtolower("%{$key}%")]);
+                });
+            })
+            ->editColumn('hidden_status', function ($data) {
+                return $data->status;
+            })
+            ->editColumn('hidden_role', function ($data) {
+                $role = $data->roles;
+                return $role->first()?->id ?? '';
+            })
             ->addColumn('status', function ($data) {
                 if ($data->status) {
                     return '<span class="badge bg-success">Approve</span>';
                 }
                 return '<span class="badge bg-warning">Waiting</span>';
+            })
+            ->filterColumn('status', function ($query, $key) {
+                switch (strtolower($key)) {
+                    case 'approve':
+                        $query->where('status', 1);
+                        break;
+                    case 'waiting':
+                        $query->where('status', 0);
+                        break;
+
+                    default:
+                        break;
+                }
             })
             ->addColumn('phone', function ($data) {
                 return $data->phone;
@@ -50,7 +84,7 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery()->latest();
+        return $model->newQuery()->where('id', '!=', Auth::id());
     }
 
     /**
@@ -62,18 +96,16 @@ class UserDataTable extends DataTable
             ->setTableId('user-table')
             ->columns($this->getColumns())
             ->minifiedAjax(route('user'))
-            ->dom("<'row m-2'<'col-sm-12 col-md-4 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-8 d-flex align-items-center justify-content-end'lB>>" .
-                "<'row'<'col-sm-12'tr>>" .
-                "<'row'<'col-sm-12 col-md-12 d-flex align-item-center justify-content-end'p>>")
-            // ->dom('Bfrtip')
-            ->language([
-                "search" => "",
-                "lengthMenu" => "_MENU_",
-                "searchPlaceholder" => trans('general.search'),
-                "processing" => '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>'
-            ])
+            ->dom("<'row'<'col-md-6 d-flex align-items-center justify-content-start'f>
+                    <'col-md-6 d-flex align-items-center justify-content-end'lB>>
+                    <'row'<'col-12'tr>>
+                    <'row'<'col-12 d-flex justify-content-center'p>>
+            ")
+            ->language(datatable_lang())
             ->orderBy(0, 'ASC')
             ->initComplete('function() {
+                $(".dataTables_length label, #user-table_filter label input").removeClass("form-control-sm");
+                $(".dataTables_length select").removeClass("form-select-sm");
                 $(".dataTables_length label, #user-table_filter label").addClass("mb-0");
                 $(".dt-buttons .dt-button").removeClass("dt-button");
                 $("#user-table_processing").removeClass("card");
@@ -87,45 +119,56 @@ class UserDataTable extends DataTable
             ->buttons(
                 Button::make('create')
                     ->attr(['id' => 'createButton'])
-                    ->className('btn btn-primary btn-sm btn-label waves-effect right waves-light rounded-pill ms-2')->text('<i class="ri-add-line ani-breath align-bottom label-icon align-middle rounded-pill fs-20"></i> <span class="only-pc">Create</span>')
+                    ->className('btn btn-primary btn-label waves-effect right waves-light rounded-pill ms-2')->text('<i class="ri-add-line ani-breath align-bottom label-icon align-middle rounded-pill fs-20"></i> <span class="only-pc">Create</span>')
                     ->editor('editor')
                     ->authorized(Auth::user()->can('user.create'))
             )->editor(
                 Editor::make()->fields([
+                    Select::make('role')->label(trans('user::user.role-type'))->options($this->getUserRoleDropDown())->id('user_role'),
                     Text::make('name')->label('Name')->attr('placeholder', 'Enter Full Name'),
                     Text::make('email')->label('Email')->attr('placeholder', 'exaplain@mail.com'),
                     Text::make('phone')->label('Phone')->attr('placeholder', 'Enter Phone number'),
                     // Text::make('password')->label('Password')->attr('placeholder', '********'),
+                    Radio::make('status')->label("Status")
+                        ->options([
+                            ['label' => "Approve", 'value' => 1,],
+                            ['label' => "Waiting", 'value' => 0],
+                        ])->default(0)->id('user_status'),
                     Text::make('password')->label(trans('user.password'))
-                    ->attr('id' , 'password')
-                    ->attr('readonly' , 'readonly')
-                    ->attr('placeholder' , trans('user.password'))
-                    ->attr('disabled' , true)
-                    ->attr('class' , 'password-field'),
+                        ->attr('id', 'password')
+                        ->attr('readonly', 'readonly')
+                        ->attr('placeholder', trans('user.password'))
+                        ->attr('disabled', true)
+                        ->attr('class', 'password-field'),
                     File::make('profile')->label('profile')
-                        ->display("function (data) {  if(!data.includes('img')) { console.log('yes'); return '<img src=\"'+data+'\" />'; } else { console.log('no'); return data; } }"),
+                        ->display("function (data) {  if(!data.includes('img')) {return '<img src=\"'+data+'\" />'; } else {return data; } }"),
                 ])
-                    ->onOpen("function(e, node, action) {
-                        $('.DTE_Action_Create').parent().addClass('modal-lg');
-                        var passwordField = $('div.DTE_Field_Name_password');
-                        generatePasswordHTML();
-                    }")
-                    ->onInitEdit("function(){ console.log('onInitEdit') }")
             )->scrollX(false);
     }
 
+    protected function getUserRoleDropDown()
+    {
+        $roles = collect(userRole())->mapWithKeys(function ($role) {
+            return [$role['display_name'] => $role['id']];
+        })->toArray();
+
+        return ['Select Roles' => ''] + $roles;
+    }
     /**
      * Get the dataTable columns definition.
      */
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title(trans(trans('translation.id')))->searchable(false)->orderable(false)->className('text-center'),
-            Column::make('status'),
-            Column::make('name'),
-            Column::make('email'),
-            Column::make('phone'),
-            Column::make('profile'),
+            Column::make('id')->title(trans('translation.id'))->searchable(false)->orderable(false)->className('text-center'),
+            Column::make('status')->title(trans('translation.status')),
+            Column::make('hidden_status')->visible(false)->searchable(false)->orderable(false),
+            Column::make('hidden_role')->visible(false)->searchable(false)->orderable(false),
+            Column::make('role')->title(trans('translation.role')),
+            Column::make('name')->title(trans('translation.name')),
+            Column::make('email')->title(trans('translation.email')),
+            Column::make('phone')->title(trans('translation.phone')),
+            Column::make('profile')->title(trans('translation.profile'))->orderable(false)->searchable(false),
             Column::make('actions')->title(trans('translation.actions'))->exportable(false)->printable(false)->className('text-center'),
         ];
     }

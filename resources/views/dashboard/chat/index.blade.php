@@ -295,7 +295,6 @@
     </div>
 @endsection
 @push('footer')
-    <script src="{{ asset('/assets/libs/toastify/toastify-js.js') }}"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="{{ asset('/assets/js/custom/chat.js') }}"></script>
 @endpush

@@ -13,12 +13,12 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::insert([
+        $permissions = [
             ['guard_name' => 'web', 'name' => 'user.create'],
             ['guard_name' => 'web', 'name' => 'user.show'],
             ['guard_name' => 'web', 'name' => 'user.edit'],
             ['guard_name' => 'web', 'name' => 'user.delete'],
-            ['guard_name' => 'web', 'name' => 'user.premission.show'],
+            ['guard_name' => 'web', 'name' => 'user.permission.show'],
             ['guard_name' => 'web', 'name' => 'user.permission.update'],
 
             ['guard_name' => 'web', 'name' => 'role.create'],
@@ -32,6 +32,13 @@ class PermissionSeeder extends Seeder
             ['guard_name' => 'web', 'name' => 'permission.show'],
             ['guard_name' => 'web', 'name' => 'permission.edit'],
             ['guard_name' => 'web', 'name' => 'permission.delete'],
-        ]);
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::updateOrInsert(
+                ['guard_name' => $permission['guard_name'], 'name' => $permission['name']],
+                ['created_at' => now(), 'updated_at' => now()]
+            );
+        }
     }
 }

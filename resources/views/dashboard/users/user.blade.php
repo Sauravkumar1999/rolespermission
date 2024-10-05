@@ -2,19 +2,33 @@
 @push('header')
     <title>Users</title>
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/datatables.bootstrap5.css') }}" />
-    {{-- <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/editor-modal-right.css') }}" /> --}}
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/editor-modal-right.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet"
         href="{{ asset('assets/libs/datatables/datatables-checkboxes-jquery/datatables.checkboxes.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/dt-editor/css/editor.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.bootstrap5.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-buttons-bs5/buttons.bootstrap5.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <style>
         div.DTE div.editor_upload div.cell {
             width: 60%;
         }
+
         .password-field {
             width: 60%;
             display: inline-block;
             margin-right: 25px;
+        }
+
+        .DTE_Field_Name_status .DTE_Field_InputControl div {
+            display: flex !important;
+            padding-right: 10px;
+        }
+
+        .DTE_Field_Name_status .DTE_Field_InputControl div label {
+            margin-left: 5px;
         }
     </style>
 @endpush
@@ -23,7 +37,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body px-0">
-                    {!! $dataTable->table(['class' => 'table table-sm']) !!}
+                    {!! $dataTable->table(['class' => 'table']) !!}
                 </div>
             </div>
         </div>
@@ -57,6 +71,8 @@
     </div>
 @endsection
 @push('footer')
+    {{-- <script type="text/javascript" src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('assets/libs/datatables/datatables-bs5/datatables-bootstrap5.js') }}"></script>
     <script src="{{ asset('assets/libs/datatables/forms-editors.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/libs/datatables/dt-editor/js/dataTables.editor.min.js') }}">
@@ -70,20 +86,41 @@
             let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
             let table = window.LaravelDataTables['{!! $dataTable->getTableAttribute('id') !!}'];
 
+            let filterContainer = $('#{!! $dataTable->getTableAttribute('id') !!}_filter');
+            filterContainer.addClass('d-flex');
+            $(`<select class="form-select mx-2">
+                        <option>Select Status</option>
+                        <option value="Approve">Approve</option>
+                        <option value="Waiting">Waiting</option>
+                    </select>`).appendTo(filterContainer)
+                .on('change', function(e) {
+                    let val = $(this).val();
+                    table.column(1).search(val).draw();
+                });
+            $(`<select class="form-select mx-2">
+                        <option value="all roles">Select Roles</option>
+                        <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                    </select>`).appendTo(filterContainer)
+                .on('change', function(e) {
+                    let val = $(this).val();
+                    table.column(2).search(val).draw();
+                });
+
             table.on('click', 'button.editor-delete', function(e) {
                 e.preventDefault();
                 tableEditor.remove(e.target.closest('tr'), {
                     title: 'Delete this data',
                     message: 'Sure to delete this data',
                     buttons: [{
-                            text: "{{ trans('general.close')}}",
+                            text: "{{ trans('general.close') }}",
                             className: 'btn btn-secondary',
                             action: function() {
                                 tableEditor.close();
                             }
                         },
                         {
-                            text: "{{ trans('general.confirm')}}",
+                            text: "{{ trans('general.confirm') }}",
                             className: 'btn btn-danger',
                             action: function() {
                                 tableEditor.submit();
@@ -98,14 +135,14 @@
                 tableEditor.edit(tdElements, {
                     title: 'User Update',
                     buttons: [{
-                            text: "{{ trans('general.close')}}",
+                            text: "{{ trans('general.close') }}",
                             className: 'btn btn-secondary',
                             action: function() {
                                 tableEditor.close();
                             }
                         },
                         {
-                            text: "{{ trans('general.confirm')}}",
+                            text: "{{ trans('general.confirm') }}",
                             className: 'btn btn-danger',
                             action: function() {
                                 tableEditor.submit();
@@ -143,6 +180,21 @@
                     });
             });
 
+            tableEditor.on('initEdit', function(e, node, data) {
+                // console.log(data);
+                setTimeout(() => {
+                    $('.DTE_Field_Name_status .DTE_Field_InputControl div input[name="status"]')
+                        .each(function() {
+                            if ($(this).val() == data.hidden_status) {
+                                $(this).prop('checked', true);
+                            } else {
+                                $(this).prop('checked', false);
+                            }
+                        });
+                        $('.DTE_Field_Name_role .DTE_Field_InputControl select').val(data.hidden_role).change();
+                }, 100);
+            });
+
             Datatablenotifications(tableEditor, 'create', 'Data created successfully');
             Datatablenotifications(tableEditor, 'edit', 'Data Updated successfully');
             Datatablenotifications(tableEditor, 'remove', 'Data Deleted successfully');
@@ -178,8 +230,7 @@
                     'title': document.documentElement.lang === 'ko' ? '복사됨' : 'Copy'
                 });
             });
-
-
+            // $('.js-example-basic-single').select2();
         });
     </script>
     <script>

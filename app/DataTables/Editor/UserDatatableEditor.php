@@ -7,6 +7,7 @@ use App\Traits\MediaHandler;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTablesEditor;
 
 use function React\Promise\all;
@@ -22,11 +23,13 @@ class UserDatatableEditor extends DataTablesEditor
     public function createRules(): array
     {
         return [
-            'email' => 'required|email|max:255|unique:' . $this->resolveModel()->getTable(),
-            'name' => 'required|max:255',
-            'phone' => 'required',
-            'profile' => 'required',
+            'email'    => 'required|email|max:255|unique:' . $this->resolveModel()->getTable(),
+            'name'     => 'required|max:255',
+            'phone'    => 'required',
+            'profile'  => 'required',
             'password' => 'required|min:8',
+            'status'   => 'required|in:0,1',
+            'role'     => 'required|exists:roles,id',
         ];
     }
 
@@ -36,10 +39,11 @@ class UserDatatableEditor extends DataTablesEditor
     public function editRules(Model $model): array
     {
         return [
-            'email' => '|required|max:255|email|' . Rule::unique($model->getTable())->ignore($model->getKey()),
-            'name' => '|required|max:255',
-            'phone' => 'required',
+            'email'    => '|required|max:255|email|' . Rule::unique($model->getTable())->ignore($model->getKey()),
+            'name'     => '|required|max:255',
+            'phone'    => 'required',
             'password' => 'nullable|min:8',
+            'role'     => 'required|exists:roles,id',
         ];
     }
 
@@ -126,6 +130,8 @@ class UserDatatableEditor extends DataTablesEditor
      */
     public function updated(Model $model, array $data)
     {
+        $role = Role::findById($data['role']);
+        $model->syncRoles($role);
         return $model;
     }
 
