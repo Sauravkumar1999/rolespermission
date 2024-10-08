@@ -10,9 +10,11 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $users = User::whereNotIn('id', [auth()->user()->id])->get(['id', 'profile', 'name']);
-        // dd($users);
-        return view('dashboard.chat.index',['pageTitle'=> trans('chat.chat')], compact('users'));
+        return view('dashboard.chat.index');
+    }
+    public function chatInbox(User $user)
+    {
+        return view('dashboard.chat.index', compact('user'));
     }
     public function message(Request $request)
     {

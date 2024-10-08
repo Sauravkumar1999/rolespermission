@@ -26,16 +26,17 @@
                     <div class="row">
                         <div class="col">
                             <div class="h-100">
-                                <div class="row mb-3 pb-1">
-                                    <div class="col-12">
-                                        <div class="d-flex align-items-lg-center flex-lg-row flex-column">
-                                            <div class="flex-grow-1">
-                                                <h4 class="fs-16 mb-1">{{ $pageTitle }}</h4>
+                                @if (isset($pageTitle))
+                                    <div class="row mb-3 pb-1">
+                                        <div class="col-12">
+                                            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                                                <div class="flex-grow-1">
+                                                    <h4 class="fs-16 mb-1">{{ $pageTitle }}</h4>
+                                                </div>
                                             </div>
-                                        </div><!-- end card header -->
+                                        </div>
                                     </div>
-                                    <!--end col-->
-                                </div>
+                                @endif
                                 @yield('main-section')
                             </div>
                         </div>

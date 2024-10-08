@@ -16,7 +16,24 @@ class Translation extends Seeder
     public function run(): void
     {
         Model::unguard();
-
+        DB::table('translation_languages')->insert([
+            [
+                "lang_name"  => "Hindi",
+                "slug"       => "hn",
+                "svg"        => "/assets/images/flags/ind.svg",
+                "is_default" => true,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                "lang_name"  => "English",
+                "slug"       => "en",
+                "svg"        => "/assets/images/flags/us.svg",
+                "is_default" => true,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        ]);
         $jsonPath = database_path('seeders/translations.json');
         $groups = json_decode(File::get($jsonPath), true);
 

@@ -17,20 +17,32 @@ class UserSeeder extends Seeder
     {
         $admin = User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
-            [
-                'name' => 'Admin Admin',
-                'email_verified_at' => now(),
-                'phone' => fake()->unique()->phoneNumber(),
-                'profile' => fake()->imageUrl(200, 200, 'people', true),
-                'status' => 1,
-                'password' => Hash::make('password'),
-            ]
+            array_merge($this->getCommonUserData(), ['name' => 'Admin Admin'])
         );
-        $admin->syncRoles(['admin']);
 
-        $admin->syncPermissions(Permission::all()->pluck('name'));
-        $adminRole = Role::findByName('admin');
-        $adminRole->syncPermissions(Permission::all()->pluck('name'));
+        $user = User::updateOrCreate(
+            ['email' => 'user@gmail.com'],
+            array_merge($this->getCommonUserData(), ['name' => fake()->name()])
+        );
+
+        $admin->syncRoles('admin')->syncPermissions(Permission::pluck('name'));
+        Role::findByName('admin')->syncPermissions(Permission::pluck('name'));
+
+        $chatPermissions = Permission::whereIn('name', ['chat.show', 'chat.create'])->pluck('name');
+
+        $user->syncRoles('user')->syncPermissions($chatPermissions);
+
         User::factory(40)->create();
+    }
+
+    private function getCommonUserData(): array
+    {
+        return [
+            'email_verified_at' => now(),
+            'phone'             => fake()->unique()->phoneNumber(),
+            'profile'           => fake()->imageUrl(200, 200, 'people', true),
+            'status'            => 1,
+            'password'          => Hash::make('password'),
+        ];
     }
 }

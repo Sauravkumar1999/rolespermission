@@ -18,32 +18,37 @@
                 </span>
             </div>
             <div class="d-flex align-items-center">
-                @php($local = App::getLocale())
-                <div class="dropdown ms-1 topbar-head-dropdown header-item">
-                    <button type="button" class="btn" id="page-header-flag" data-bs-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <span class="d-flex align-items-center">
-                            @php($lang =getLanguage())
-                            <img class="rounded" src="@if ($lang){{ $lang->getSvg() }} @else '/assets/images/flags/ind.svg' @endif" alt="Header Avatar" height="20">
-                        </span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" id="page-header-flag-dropdown">
-                        @foreach (App\Models\TranslationLanguage::all() as $list)
-                            <a href="{{ route('translations.change', $list->slug ) }}"
-                                class="dropdown-item notify-item language py-2 @if($local === $list->slug) active @endif" data-lang="{{ $list->slug }}" title="{{ $list->lang_name }}">
-                                <img src="{{ asset($list->svg)}}" alt="user-image" class="me-2 rounded"
-                                    height="18">
-                                <span class="align-middle">{{ $list->lang_name }}</span>
-                            </a>
-                        @endforeach
+                @can('translations.change')
+                    @php($local = App::getLocale())
+                    <div class="dropdown ms-1 topbar-head-dropdown header-item">
+                        <button type="button" class="btn" id="page-header-flag" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <span class="d-flex align-items-center">
+                                @php($lang = getLanguage())
+                                <img class="rounded"
+                                    src="@if ($lang) {{ $lang->getSvg() }} @else /assets/images/flags/ind.svg @endif"
+                                    alt="Header Avatar" height="20">
+                            </span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" id="page-header-flag-dropdown">
+                            @foreach (App\Models\TranslationLanguage::all() as $list)
+                                <a href="{{ route('translations.change', $list->slug) }}"
+                                    class="dropdown-item notify-item language py-2 @if ($local === $list->slug) active @endif"
+                                    data-lang="{{ $list->slug }}" title="{{ $list->lang_name }}">
+                                    <img src="{{ asset($list->svg) }}" alt="user-image" class="me-2 rounded" height="18">
+                                    <span class="align-middle">{{ $list->lang_name }}</span>
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-                <div class="ms-1 header-item d-none d-sm-flex">
-                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
-                        data-toggle="fullscreen">
-                        <i class='bx bx-fullscreen fs-22'></i>
-                    </button>
-                </div>
+                    <div class="ms-1 header-item d-none d-sm-flex">
+                        <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                            data-toggle="fullscreen">
+                            <i class='bx bx-fullscreen fs-22'></i>
+                        </button>
+                    </div>
+
+                @endcan
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <div class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="offcanvas"
                         data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">

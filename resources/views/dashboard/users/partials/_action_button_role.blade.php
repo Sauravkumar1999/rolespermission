@@ -3,7 +3,7 @@
         <button onclick="" class="btn btn-sm btn-icon editor-permission" data-id="{{ $data->id }}">
             <i class="ri-spy-fill text-secondary ri-lg"></i></button>
     @endcan
-    @can('role.edit')
+    @can('role.update')
         <button class="btn btn-sm btn-icon editor-edit"><i class="ri-edit-box-fill text-warning ri-lg"></i></button>
     @endcan
     @can('role.delete')
