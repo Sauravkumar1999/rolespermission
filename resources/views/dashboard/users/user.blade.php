@@ -104,7 +104,7 @@
                     </select>`).appendTo(filterContainer)
                 .on('change', function(e) {
                     let val = $(this).val();
-                    table.column(2).search(val).draw();
+                    table.column(4).search(val).draw();
                 });
 
             table.on('click', 'button.editor-delete', function(e) {

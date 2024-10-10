@@ -46,7 +46,12 @@
                                 <div class="position-relative" id="users-chat">
                                     <x-chat.user-chat-top-bar :user="$user" />
                                     <!-- end chat user head -->
-                                    <x-chat.chat-conversation-list/>
+                                    <div class="chat-conversation p-3 p-lg-4 " id="chat-conversation" data-simplebar>
+                                        <div id="elmLoader">
+                                        </div>
+                                        <ul class="list-unstyled chat-conversation-list" id="users-conversation"></ul>
+                                    </div>
+
                                     <div class="alert alert-warning alert-dismissible copyclipboard-alert px-4 fade show"
                                         id="copyClipBoard" role="alert">
                                         Message copied

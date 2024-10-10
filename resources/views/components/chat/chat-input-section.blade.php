@@ -17,7 +17,7 @@
                 <div class="chat-input-feedback">Please Enter a Message</div>
                 <input type="text" class="form-control chat-input bg-light border-light" id="chat-input"
                     placeholder="Type your message..." autocomplete="off">
-                <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+                <input type="hidden" name="auth_user_id" value="{{ auth()->user()->id }}">
             </div>
             <div class="col-auto">
                 <div class="chat-input-links ms-2">

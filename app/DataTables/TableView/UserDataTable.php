@@ -40,11 +40,11 @@ class UserDataTable extends DataTable
                 return $role->first()?->display_name ?? 'N/A';
             })
             ->filterColumn('role', function ($query, $key) {
-                if ($key === 'all roles') {
+                if ($key === 'all roles' || empty($key)) {
                     return;
                 }
                 return $query->whereHas('roles', function ($q) use ($key) {
-                    $q->whereRaw('LOWER(display_name) LIKE ?', [strtolower("%{$key}%")]);
+                    $q->whereRaw('LOWER(display_name) LIKE ?', [strtolower($key)]);
                 });
             })
             ->editColumn('hidden_status', function ($data) {
@@ -160,7 +160,7 @@ class UserDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title(trans('translation.id'))->searchable(false)->orderable(false)->className('text-center'),
+            Column::make('id')->title(trans('general.id'))->searchable(false)->orderable(false)->className('text-center'),
             Column::make('status')->title(trans('translation.status')),
             Column::make('hidden_status')->visible(false)->searchable(false)->orderable(false),
             Column::make('hidden_role')->visible(false)->searchable(false)->orderable(false),
@@ -168,8 +168,9 @@ class UserDataTable extends DataTable
             Column::make('name')->title(trans('translation.name')),
             Column::make('email')->title(trans('translation.email')),
             Column::make('phone')->title(trans('translation.phone')),
-            Column::make('profile')->title(trans('translation.profile'))->orderable(false)->searchable(false),
-            Column::make('actions')->title(trans('translation.actions'))->exportable(false)->printable(false)->className('text-center'),
+            Column::make('profile')->title(trans('translation.profile'))->orderable(false)->searchable(false)->orderable(false)->searchable(false),
+            Column::make('actions')->title(trans('general.actions'))->exportable(false)->printable(false)
+            ->orderable(false)->searchable(false)->className('text-center'),
         ];
     }
 

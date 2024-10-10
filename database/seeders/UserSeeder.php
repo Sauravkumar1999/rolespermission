@@ -25,12 +25,13 @@ class UserSeeder extends Seeder
             array_merge($this->getCommonUserData(), ['name' => fake()->name()])
         );
 
-        $admin->syncRoles('admin')->syncPermissions(Permission::pluck('name'));
-        Role::findByName('admin')->syncPermissions(Permission::pluck('name'));
-
         $chatPermissions = Permission::whereIn('name', ['chat.show', 'chat.create'])->pluck('name');
 
-        $user->syncRoles('user')->syncPermissions($chatPermissions);
+        $admin->syncRoles('admin');
+        Role::findByName('admin')->syncPermissions(Permission::pluck('name'));
+
+        Role::findByName('user')->syncPermissions($chatPermissions);
+        $user->syncRoles('user');
 
         User::factory(40)->create();
     }

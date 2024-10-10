@@ -1,62 +1,113 @@
 $(() => {
     const socket = io('http://localhost:3000');
 
+    socket.on('connect', () => {
+        const auth_user = getAuthId();
+        socket.emit('userConnected', auth_user);
+    });
+
+    socket.on('updateConnectedUsers', (connectedUsers) => {
+        console.log('Connected users:', connectedUsers);
+        // updateConnectedUsersView(connectedUsers);
+    });
+
+    socket.on('broadcastChat', ({ from, message }) => {
+        console.log('Message from', from, ':', message);
+        if (from == getSelectedRecipientId()) {
+            addToView(socket, from, message, false, 'seen');
+        }
+    });
+
+    socket.on('messageStatus', ({ messageId, status }) => {
+        updateMessageStatus(messageId, status); // Update message status in the view
+    });
+
     $('#chatinput-form').submit(function (e) {
         e.preventDefault();
-        let inputFiled = $('input[id="chat-input"]');
-        if (inputFiled.val() != null && inputFiled.val() != '') {
-            sendMessage(inputFiled.val());
+        let inputField = $('input[id="chat-input"]');
+        const recipientId = getSelectedRecipientId();
+
+        if (inputField.val() !== '' && recipientId) {
+            const messageText = inputField.val();
+            sendMessage(socket, messageText, recipientId);
+            addToView(socket, getAuthId(), messageText, true, 'sent');
         }
-        inputFiled.val('');
+        inputField.val('');
     });
-    socket.on('connect', () => {
-        console.log('Connected to the server');
-    });
-    socket.on('broadcastChat', (message) => {
-        addToView(message);
-    });
+});
 
-    function sendMessage(message) {
-        socket.emit('sendChat', message);
+function sendMessage(socket, messageText, recipientId) {
+    socket.emit('sendChat', { message: messageText, recipientId });
+}
+
+function markMessageAsSeen(socket, messageId) {
+    const senderId = getAuthId();
+    socket.emit('messageSeen', { messageId, senderId });
+}
+
+function updateMessageStatus(messageId, status) {
+    const messageElement = $(`#message-${messageId}`);
+    if (messageElement.length > 0) {
+        const iconClass = getIconClass(status);
+        const iconColor = getIconColor(status);
+        messageElement.find('.check-message-icon i').attr('class', iconClass+' '+iconColor).removeClass('ri-check-line').addClass(iconColor);
     }
+}
 
-    const addToView = (data) => {
-        let list = $('#users-conversation');
-        let dropdown = `<div class="dropdown align-self-start message-box-drop">
-                            <a class="dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="ri-more-2-fill"></i>
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item delete-item" href="#">
-                                    <i
-                                        class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Delete
-                                </a>
-                                <a class="dropdown-item delete-item" href="#">
-                                    <i
-                                        class="ri-delete-bin-5-line me-2 text-muted align-bottom"></i>Edit
-                                </a>
-                            </div>
-                        </div>`;
-        let meaasge = `<li class="chat-list right" id="chat-list-4">
-                            <div class="conversation-list">
-                                <div class="user-chat-content">
-                                    <div class="ctext-wrap">
-                                        <div class="ctext-wrap-content">
-                                            <p class="mb-0 ctext-content">${data} </p>
-                                        </div>
-                                    </div>
-                                    <div class="conversation-name">
-                                        <small class="text-muted time">12:06 pm</small>
-                                        <span class="text-success check-message-icon"><i class="ri-check-double-line"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>`;
-        list.append(meaasge);
-        var scrollEl = new SimpleBar(document.getElementById("chat-conversation"));
-        scrollEl.getScrollElement().scrollTop = document.getElementById("users-conversation").scrollHeight;
+const addToView = (socket, from, messageText, isSentByCurrentUser = false, status = 'sent') => {
+    let list = $('#users-conversation');
+    let timestamp = new Date().toLocaleTimeString();
+    const messageId = generateUniqueId(); // Generate unique ID for the message
+    const messageClass = isSentByCurrentUser ? 'right' : 'left';
+
+    const iconClass = getIconClass(status);
+    const iconColor = getIconColor(status);
+
+    let messageHtml = `
+        <li class="chat-list ${messageClass}" id="message-${messageId}">
+            <div class="conversation-list">
+                <div class="user-chat-content">
+                    <div class="ctext-wrap">
+                        <div class="ctext-wrap-content">
+                            <p class="mb-0 ctext-content">${messageText}</p>
+                        </div>
+                    </div>
+                    <div class="conversation-name">
+                        <small class="text-muted time">${timestamp}</small>
+                        <span class="${iconColor} check-message-icon">
+                            <i class="${iconClass} ${iconColor}"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </li>`;
+
+    list.append(messageHtml);
+
+    let scrollEl = new SimpleBar(document.getElementById("chat-conversation"));
+    scrollEl.getScrollElement().scrollTop = document.getElementById("users-conversation").scrollHeight;
+
+    if (!isSentByCurrentUser) {
+        markMessageAsSeen(socket, messageId);
     }
-})
+};
 
+function getSelectedRecipientId() {
+    return $('.chat-leftsidebar #chats .bg-success-subtle').data('user-id');
+}
+
+function getAuthId() {
+    return $('input[name="auth_user_id"]').val();
+}
+
+function getIconClass(status) {
+    return status === 'seen' ? 'ri-check-double-line' : 'ri-check-line';
+}
+
+function getIconColor(status) {
+    return status === 'seen' ? 'text-primary' : 'text-secondary';
+}
+
+function generateUniqueId() {
+    return 'msg-' + Math.random().toString(36).substr(2, 9);
+}

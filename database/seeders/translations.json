@@ -1,14 +1,11 @@
 {
     "translation": [
         {"key": "translation", "text": {"en": "translation", "hn": "अनुवाद"}},
-        {"key": "id", "text": {"en": "ID", "hn": "आईडी"}},
         {"key": "group", "text": {"en": "Group", "hn": "समूह"}},
         {"key": "key", "text": {"en": "Key", "hn": "कुंजी"}},
         {"key": "text", "text": {"en": "Text", "hn": "पाठ"}},
-        {"key": "actions", "text": {"en": "Actions", "hn": "क्रियाएँ"}},
         {"key": "language-name", "text": {"en": "Language name", "hn": "भाषा का नाम"}},
-        {"key": "svg", "text": {"en": "Svg", "hn": "Svg"}},
-        {"key": "created-at", "text": {"en": "Created at", "hn": "बनाया गया"}}
+        {"key": "svg", "text": {"en": "Svg", "hn": "Svg"}}
     ],
     "user": [
         {"key": "userall", "text": {"en": "Users", "hn": "उपयोगकर्तासभी"}},
@@ -27,6 +24,7 @@
         {"key": "schedule", "text": {"en": "Schedule", "hn": "अनुसूची"}}
     ],
     "general": [
+        {"key": "id", "text": {"en": "ID", "hn": "आईडी"}},
         {"key": "create", "text": {"en": "Create", "hn": "बनाएँ"}},
         {"key": "edit", "text": {"en": "Edit", "hn": "संपादित करें"}},
         {"key": "delete", "text": {"en": "Delete", "hn": "हटाएँ"}},
@@ -34,7 +32,9 @@
         {"key": "previous", "text": {"en": "Previous", "hn": "पिछला"}},
         {"key": "search", "text": {"en": "Search...", "hn": "खोज..."}},
         {"key": "page", "text": {"en": "Page", "hn": "पृष्ठ"}},
-        {"key": "other", "text": {"en": "Other", "hn": "अन्य"}}
+        {"key": "other", "text": {"en": "Other", "hn": "अन्य"}},
+        {"key": "actions", "text": {"en": "Actions", "hn": "क्रियाएँ"}},
+        {"key": "created-at", "text": {"en": "Created at", "hn": "बनाया गया"}}
     ],
     "chat": [
         {"key": "chat", "text": {"en": "Chat", "hn": "बात करना"}}

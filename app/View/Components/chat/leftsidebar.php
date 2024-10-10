@@ -17,7 +17,7 @@ class leftsidebar extends Component
     public function __construct($user = null)
     {
         $this->user= $user;
-        $this->users= User::whereNotIn('id', [auth()->user()->id])->get(['id', 'profile', 'name']);
+        $this->users= User::whereNotIn('id', [auth()->user()->id])->orderBy('name')->get(['id', 'profile', 'name']);
     }
 
     /**
