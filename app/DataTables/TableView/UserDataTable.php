@@ -33,7 +33,7 @@ class UserDataTable extends DataTable
                 return view('dashboard.users.partials._action_button', ['data' => $data])->render();
             })
             ->addColumn('profile', function ($data) {
-                return '<img src="' . $data->profile . '" alt="Profile" class="avatar-xs rounded-circle" />';
+                return '<img src="' . $data->profile . '" alt="Profile" class="avatar-xs rounded-circle" onerror="this.onerror=null; this.src=\'/assets/images/error400-cover.png\';" />';
             })
             ->addColumn('role', function ($data) {
                 $role = $data->roles;
@@ -137,7 +137,7 @@ class UserDataTable extends DataTable
                     Text::make('password')->label(trans('user.password'))
                         ->attr('id', 'password')
                         ->attr('readonly', 'readonly')
-                        ->attr('placeholder', trans('user.password'))
+                        ->attr('placeholder', '********')
                         ->attr('disabled', true)
                         ->attr('class', 'password-field'),
                     File::make('profile')->label('profile')

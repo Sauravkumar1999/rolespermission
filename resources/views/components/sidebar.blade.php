@@ -31,71 +31,85 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
                 </li>
-                <li class="menu-title"><span data-key="t-menu">Pages</span></li>
+                <li class="menu-title"><span data-key="t-menu">Pages
+                        {{ Request::is(['user', 'role', 'permission']) }}</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ Request::segment(1) === 'home' ? ' active' : '' }}" href="/home">
-                        <i class="ri-dashboard-2-line ani-breath"></i> <span data-key="t-dashboard">{{ trans('dashboard.dashboard') }}</span>
+                        <i class="ri-dashboard-2-line ani-breath"></i> <span
+                            data-key="t-dashboard">{{ trans('dashboard.dashboard') }}</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-account-circle-line ani-breath"></i><span data-key="t-dashboards">{{ trans('user.user') }}</span>
-                    </a>
-                    <div class="collapse menu-dropdown {{ Request::segment(1) === 'user' ? 'show' : '' }}"
-                        id="sidebarDashboards">
-                        <ul class="nav nav-sm flex-column">
-                            @can('user.show')
-                                <li class="nav-item">
-                                    <a href="{{ route('user') }}" class="nav-link {{ Request::is('user') ? 'active' : '' }}"
-                                        data-key="t-analytics">{{ trans('user.userall') }}</a>
-                                </li>
-                            @endcan
-                            @can('role.show')
-                                <li class="nav-item">
-                                    <a href="{{ route('role') }}"
-                                        class="nav-link {{ Request::segment(2) === 'role' ? 'active' : '' }}"
-                                        data-key="t-crm"> {{ trans('role.role') }} </a>
-                                </li>
-                            @endcan
-                            @can('permission.show')
-                                <li class="nav-item">
-                                    <a href="{{ route('permission') }}"
-                                        class="nav-link {{ Request::segment(2) === 'permission' ? 'active' : '' }}"
-                                        data-key="t-crm"> {{ trans('permission.permission') }} </a>
-                                </li>
-                            @endcan
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link {{ Request::segment(1) === 'chat' ? ' active' : '' }}" href="/chat">
-                        <i class="ri-wechat-line ani-breath"></i> <span data-key="t-dashboard">{{ trans('chat.chat') }}</span>
-                    </a>
-                </li>
-                {{-- <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Support</span></li> --}}
+                @can(['user.show', 'role.show', 'permission.show'])
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
+                            aria-expanded="{{ request()->routeIs(['user', 'role', 'permission*']) ? 'true' : 'false' }}"
+                            aria-controls="sidebarDashboards">
+                            <i class="ri-account-circle-line ani-breath"></i><span
+                                data-key="t-dashboards">{{ trans('user.user') }}</span>
+                        </a>
+                        <div class="collapse menu-dropdown {{ request()->routeIs(['user', 'role', 'permission']) ? 'show' : '' }}"
+                            id="sidebarDashboards">
+                            <ul class="nav nav-sm flex-column">
+                                @can('user.show')
+                                    <li class="nav-item">
+                                        <a href="{{ route('user') }}" class="nav-link {{ Request::is('user') ? 'active' : '' }}"
+                                            data-key="t-analytics">{{ trans('user.users') }}</a>
+                                    </li>
+                                @endcan
+                                @can('role.show')
+                                    <li class="nav-item">
+                                        <a href="{{ route('role') }}"
+                                            class="nav-link {{ Request::segment(2) === 'role' ? 'active' : '' }}"
+                                            data-key="t-crm"> {{ trans('role.role') }} </a>
+                                    </li>
+                                @endcan
+                                @can('permission.show')
+                                    <li class="nav-item">
+                                        <a href="{{ route('permission') }}"
+                                            class="nav-link {{ Request::segment(2) === 'permission' ? 'active' : '' }}"
+                                            data-key="t-crm"> {{ trans('permission.permission') }} </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
+                @can('chat.show')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('chat.index') ? ' active' : '' }}" href="{{ route('chat.index') }}">
+                            <i class="ri-wechat-line ani-breath"></i> <span
+                                data-key="t-dashboard">{{ trans('chat.chat') }}</span>
+                        </a>
+                    </li>
+                @endcan
                 <li class="menu-title"><i class="ri-more-fill"></i> <span data-key="t-pages">Other</span></li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarSetting" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarSetting">
-                        <i class="ri-settings-5-line"></i> <span data-key="t-layouts">{{ trans('setting.setting') }}</span>
-                    </a>
-                    @php($isActive = in_array(Route::currentRouteName(), ['schedule.index', 'translations.index', 'translations.language']))
-                    <div class="collapse menu-dropdown {{ $isActive ? 'show' : '' }}" id="sidebarSetting">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="{{ route('schedule.index') }}"
-                                    class="nav-link {{ Route::currentRouteNamed('schedule.index') ? 'active' : '' }} "
-                                    data-key="t-horizontal">{{ trans('schedule.schedule') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('translations.index') }}"
-                                    class="nav-link {{ in_array(Route::currentRouteName(), ['translations.index', 'translations.language'])? 'active' : '' }} "
-                                    data-key="t-horizontal">{{ trans('translation.translation') }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+                @can(['translations.show', 'schedule.show'])
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarSetting" data-bs-toggle="collapse" role="button"
+                            aria-expanded="{{ request()->routeIs(['schedule.index', 'translations.index', 'translations.language']) ? true : false }}" aria-controls="sidebarSetting">
+                            <i class="ri-settings-5-line"></i> <span
+                                data-key="t-layouts">{{ trans('setting.setting') }}</span>
+                        </a>
+                        <div class="collapse menu-dropdown {{ request()->routeIs(['schedule.index', 'translations.index', 'translations.language']) ? 'show' : '' }}" id="sidebarSetting">
+                            <ul class="nav nav-sm flex-column">
+                                @can('schedule.show')
+                                    <li class="nav-item">
+                                        <a href="{{ route('schedule.index') }}"
+                                            class="nav-link {{ request()->routeIs('schedule.index') ? 'active' : '' }} "
+                                            data-key="t-horizontal">{{ trans('schedule.schedule') }}</a>
+                                    </li>
+                                @endcan
+                                @can('translations.show')
+                                    <li class="nav-item">
+                                        <a href="{{ route('translations.index') }}"
+                                            class="nav-link {{ request()->routeIs(['translations.index', 'translations.language']) ? 'active' : '' }} "
+                                            data-key="t-horizontal">{{ trans('translation.translation') }}</a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
             </ul>
         </div>
     </div>

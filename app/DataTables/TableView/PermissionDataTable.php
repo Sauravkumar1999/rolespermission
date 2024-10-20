@@ -37,7 +37,7 @@ class PermissionDataTable extends DataTable
      */
     public function query(Permission $model): QueryBuilder
     {
-        return $model->orderBy('name','asc')->newQuery();
+        return $model->orderBy('name', 'asc')->newQuery();
     }
 
     /**
@@ -71,15 +71,15 @@ class PermissionDataTable extends DataTable
                 'className' => 'dt-center',
                 'targets'   => 'all'
             ])
-            ->buttons(
-                Button::make('create')
-                    ->attr(['id' => 'createButton'])
-                    ->className('btn btn-primary btn-sm btn-label waves-effect right waves-light rounded-pill ms-2')->text('<i class="ri-add-line ani-breath align-bottom label-icon align-middle rounded-pill fs-20"></i> <span class="only-pc">Create</span>')
-                    ->editor('editor')
-                    ->authorized(Auth::user()->can('permission.create'))
+            ->buttons([]
+                // Button::make('create')
+                //     ->attr(['id' => 'createButton'])
+                //     ->className('btn btn-primary btn-sm btn-label waves-effect right waves-light rounded-pill ms-2')->text('<i class="ri-add-line ani-breath align-bottom label-icon align-middle rounded-pill fs-20"></i> <span class="only-pc">Create</span>')
+                //     ->editor('editor')
+                //     ->authorized(Auth::user()->can('permission.create'))
             )->editor(
                 Editor::make()->fields([
-                    Text::make('name')->label('Name')->attr('placeholder', 'Enter Name'),
+                    Text::make('name')->label('Name')->attr('placeholder', 'Enter Name')->attr('disabled', true),
                     Text::make('display_name')->label('Display Name')->attr('placeholder', 'Enter Name'),
                     Text::make('desc')->label('Description'),
                 ])

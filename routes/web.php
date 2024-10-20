@@ -25,26 +25,38 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/home', 'index')->name('home');
         Route::get('/get-expire', 'getSessionExpiration')->name('getSessionExpiration');
     });
-    Route::controller(App\Http\Controllers\UserController::class)->prefix('user')->group(function () {
-        // ---------user routes
-        Route::get('/', 'user')->name('user')->middleware('permission:user.show');
-        Route::post('/', 'process')->name('user.process')->middleware('permission:user.update|user.delete');
-        Route::post('/permission/{id}/update', 'permissionUpdate')->name('permission.update')->middleware('permission:user.permission.update');
-        Route::get('/permission/{id}/all', 'permissionAll')->name('permission.all')->middleware('permission:user.permission.show');
+    Route::prefix('user')->controller(App\Http\Controllers\UserController::class)
+    ->group(function () {
 
-        // ---------role routes
-        Route::get('/role', 'role')->name('role')->middleware('permission:role.show');
-        Route::post('/role', 'roleProcess')->name('role.process')->middleware('permission:role.create|role.update|role.delete');
-        Route::get('/role/permission/{id}/all', 'permissionRoleAll')->name('role.permission.all')->middleware('permission:role.permission.show');
-        Route::post('/role/permission/{id}/update', 'permissionRoleUpdate')->name('role.permission.update')->middleware('permission:role.permission.update');
+        // -------- User Routes
+        Route::middleware('permission:user.show')->get('/', 'user')->name('user');
+        Route::middleware('permission:user.update|user.delete')->post('/', 'process')->name('user.process');
+        Route::middleware('permission:user.permission.update')->post('/permission/{id}/update', 'permissionUpdate')->name('permission.update');
+        Route::middleware('permission:user.permission.show')->get('/permission/{id}/all', 'permissionAll')->name('permission.all');
 
-        // -------- permission routes
-        Route::get('/permission', 'permission')->name('permission')->middleware('permission:permission.show');
-        Route::post('/permission', 'permissionProcess')->name('permission.process')->middleware('permission:permission.update|permission.delete');
+        // -------- Profile Routes
+        Route::middleware('permission:user.show')->get('/profile', 'Profile')->name('user.profile');
+
+        // -------- Role Routes
+        Route::prefix('role')->group(function () {
+            Route::middleware('permission:role.show')->get('/', 'role')->name('role');
+            Route::middleware('permission:role.create|role.update|role.delete')->post('/', 'roleProcess')->name('role.process');
+            Route::middleware('permission:role.permission.show')->get('/permission/{id}/all', 'permissionRoleAll')->name('role.permission.all');
+            Route::middleware('permission:role.permission.update')->post('/permission/{id}/update', 'permissionRoleUpdate')->name('role.permission.update');
+        });
+
+        // -------- Permission Routes
+        Route::prefix('permission')->group(function () {
+            Route::middleware('permission:permission.show')->get('/', 'permission')->name('permission');
+            Route::middleware('permission:permission.update|permission.delete')->post('/', 'permissionProcess')->name('permission.process');
+        });
     });
 
+
     Route::controller(App\Http\Controllers\ScheduleController::class)->prefix('schedule')->name('schedule.')->group(function () {
-        Route::get('/', 'index')->name('index')->middleware('permission:schedule.edit|schedule.delete');
+        Route::get('/', 'index')->name('index')->middleware('permission:schedule.show');
+        Route::post('/', 'index')->name('update')->middleware('permission:schedule.update');
+        Route::get('/{id}', 'index')->name('delete')->middleware('permission:schedule.delete');
     });
     Route::controller(App\Http\Controllers\TranslationController::class)->prefix('translations')->group(function () {
         Route::get('/', 'index')->name('translations.index')->middleware('permission:translations.show');

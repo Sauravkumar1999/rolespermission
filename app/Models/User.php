@@ -26,16 +26,27 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = ['password', 'remember_token','created_at','updated_at'];
+    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at'];
 
     /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
      */
-    protected $casts = ['email_verified_at' => 'datetime', 'password' => 'hashed',];
+    protected $casts = ['email_verified_at' => 'datetime', 'password' => 'hashed'];
+
     public function setting()
     {
         return $this->hasOne(Setting::class);
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'recipient_id');
     }
 }

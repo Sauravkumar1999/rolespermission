@@ -1,69 +1,85 @@
 $(() => {
-    const socket = io('http://localhost:3000');
+    const socket = io(getNodeServerURL());
+    const authUserId = getAuthId();
 
     socket.on('connect', () => {
-        const auth_user = getAuthId();
-        socket.emit('userConnected', auth_user);
+        socket.emit('userConnected', authUserId)
+        Toastify({
+            text: "You are connected",
+            gravity: "top",
+            position: "right",
+            duration: 3000,
+            close: true,
+            className: "bg-success"
+        }).showToast();
     });
 
-    socket.on('updateConnectedUsers', (connectedUsers) => {
-        console.log('Connected users:', connectedUsers);
-        // updateConnectedUsersView(connectedUsers);
-    });
+    socket.on('updateConnectedUsers', updateConnectedUsersView);
 
-    socket.on('broadcastChat', ({ from, message }) => {
-        console.log('Message from', from, ':', message);
+    socket.on('typing', ({ from, isTyping }) => {
         if (from == getSelectedRecipientId()) {
-            addToView(socket, from, message, false, 'seen');
+            showTypingStatus(isTyping);
         }
     });
-
-    socket.on('messageStatus', ({ messageId, status }) => {
-        updateMessageStatus(messageId, status); // Update message status in the view
+    socket.on('broadcastChat', ({ from, message, messageId }) => {
+        if (from == getSelectedRecipientId()) {
+            addToView(socket, from, message, false, 'delivered');
+            markMessageAsSeen(socket, messageId, from);
+            return;
+        }
+        Toastify({
+            text: message + "from" + from,
+            gravity: "top",
+            position: "right",
+            duration: 3000,
+            close: true,
+            className: "bg-success"
+        }).showToast();
     });
 
-    $('#chatinput-form').submit(function (e) {
+    socket.on('messageSeenStatus', ({ messageId }) => updateMessageStatus(messageId, 'seen'));
+
+    $('#chatinput-form').submit(e => {
         e.preventDefault();
-        let inputField = $('input[id="chat-input"]');
+        const inputField = $('#chat-input');
+        const messageText = inputField.val();
         const recipientId = getSelectedRecipientId();
 
-        if (inputField.val() !== '' && recipientId) {
-            const messageText = inputField.val();
-            sendMessage(socket, messageText, recipientId);
-            addToView(socket, getAuthId(), messageText, true, 'sent');
+        if (messageText && recipientId) {
+            const messageId = generateUniqueId();
+            sendMessage(socket, messageText, recipientId, messageId);
+            addToView(socket, authUserId, messageText, true, 'sent', messageId);
+            inputField.val('');
         }
-        inputField.val('');
+    });
+
+    $('#chatinput-form #chat-input').on('input', () => {
+        const recipientId = getSelectedRecipientId();
+        if (recipientId) socket.emit('typing', { to: recipientId, isTyping: true });
+        debounceStopTyping(socket, recipientId);
     });
 });
 
-function sendMessage(socket, messageText, recipientId) {
-    socket.emit('sendChat', { message: messageText, recipientId });
+let typingTimeout;
+
+function sendMessage(socket, messageText, recipientId, messageId) {
+    socket.emit('sendChat', { message: messageText, recipientId, messageId });
 }
 
-function markMessageAsSeen(socket, messageId) {
-    const senderId = getAuthId();
-    socket.emit('messageSeen', { messageId, senderId });
+function markMessageAsSeen(socket, messageId, from) {
+    socket.emit('messageSeen', { messageId, from });
 }
 
-function updateMessageStatus(messageId, status) {
-    const messageElement = $(`#message-${messageId}`);
-    if (messageElement.length > 0) {
-        const iconClass = getIconClass(status);
-        const iconColor = getIconColor(status);
-        messageElement.find('.check-message-icon i').attr('class', iconClass+' '+iconColor).removeClass('ri-check-line').addClass(iconColor);
-    }
+function updateConnectedUsersView(connectedUsers) {
+    updateUserStatus($('#chat-list li[data-user-id]'), connectedUsers, true);
+    updateUserStatus($('#contact-list li[data-user-id]'), connectedUsers, false);
 }
 
-const addToView = (socket, from, messageText, isSentByCurrentUser = false, status = 'sent') => {
-    let list = $('#users-conversation');
-    let timestamp = new Date().toLocaleTimeString();
-    const messageId = generateUniqueId(); // Generate unique ID for the message
+function addToView(socket, from, messageText, isSentByCurrentUser = false, status = 'sent', messageId = generateUniqueId()) {
     const messageClass = isSentByCurrentUser ? 'right' : 'left';
+    const timestamp = new Date().toLocaleTimeString();
 
-    const iconClass = getIconClass(status);
-    const iconColor = getIconColor(status);
-
-    let messageHtml = `
+    const messageHtml = `
         <li class="chat-list ${messageClass}" id="message-${messageId}">
             <div class="conversation-list">
                 <div class="user-chat-content">
@@ -74,23 +90,50 @@ const addToView = (socket, from, messageText, isSentByCurrentUser = false, statu
                     </div>
                     <div class="conversation-name">
                         <small class="text-muted time">${timestamp}</small>
-                        <span class="${iconColor} check-message-icon">
-                            <i class="${iconClass} ${iconColor}"></i>
+                        <span class="${getIconColor(status)} check-message-icon">
+                            <i class="${getIconClass(status)} ${getIconColor(status)}"></i>
                         </span>
                     </div>
                 </div>
             </div>
         </li>`;
 
-    list.append(messageHtml);
+    $('#users-conversation').append(messageHtml) && scrollToBottom('chat-conversation');
+    return messageId;
+}
 
-    let scrollEl = new SimpleBar(document.getElementById("chat-conversation"));
-    scrollEl.getScrollElement().scrollTop = document.getElementById("users-conversation").scrollHeight;
+function updateMessageStatus(messageId, status) {
+    const icon = $(`#message-${messageId} .check-message-icon i`);
+    icon.attr('class', `${getIconClass(status)} ${getIconColor(status)}`);
+}
 
-    if (!isSentByCurrentUser) {
-        markMessageAsSeen(socket, messageId);
-    }
-};
+function updateUserStatus(elements, connectedUsers, isChatList) {
+    elements.each(function () {
+        const userId = $(this).data('user-id');
+        const statusSpan = $(this).find('.chat-user-img span');
+        const isConnected = connectedUsers.includes(userId.toString());
+
+        toggleClass(statusSpan, 'user-status', isConnected);
+
+        if (isChatList && $(this).hasClass('bg-success-subtle')) {
+            toggleClass($('.user-chat-topbar .chat-user-img span'), 'user-status', isConnected);
+            toggleClass($('.user-chat-topbar .chat-user-img').next().find('span'), 'd-none', isConnected);
+        }
+    });
+}
+
+function debounceStopTyping(socket, recipientId) {
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => socket.emit('typing', { to: recipientId, isTyping: false }), 1000);
+}
+function toggleClass(element, className, condition) {
+    condition ? element.addClass(className) : element.removeClass(className);
+}
+
+function scrollToBottom(elementId) {
+    new SimpleBar(document.getElementById(elementId)).getScrollElement().scrollTop =
+        document.getElementById("users-conversation").scrollHeight;
+}
 
 function getSelectedRecipientId() {
     return $('.chat-leftsidebar #chats .bg-success-subtle').data('user-id');
@@ -99,13 +142,23 @@ function getSelectedRecipientId() {
 function getAuthId() {
     return $('input[name="auth_user_id"]').val();
 }
+function getNodeServerURL() {
+    return $('input[name="node_server_url"]').val();
+}
+
+function showTypingStatus(isTyping) {
+    let element = $('.user-chat-topbar .chat-user-img').next().find('.userStatus')
+    if (element) {
+        isTyping ? element.html('<small class="text-success">Typing...</small>') : element.html('<small>Online</small>');
+    }
+}
 
 function getIconClass(status) {
     return status === 'seen' ? 'ri-check-double-line' : 'ri-check-line';
 }
 
 function getIconColor(status) {
-    return status === 'seen' ? 'text-primary' : 'text-secondary';
+    return status === 'seen' ? 'text-success' : 'text-secondary';
 }
 
 function generateUniqueId() {

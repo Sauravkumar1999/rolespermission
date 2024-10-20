@@ -19,21 +19,18 @@
             </div>
             <div class="d-flex align-items-center">
                 @can('translations.change')
-                    @php($local = App::getLocale())
                     <div class="dropdown ms-1 topbar-head-dropdown header-item">
                         <button type="button" class="btn" id="page-header-flag" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             <span class="d-flex align-items-center">
-                                @php($lang = getLanguage())
-                                <img class="rounded"
-                                    src="@if ($lang) {{ $lang->getSvg() }} @else /assets/images/flags/ind.svg @endif"
+                                <img class="rounded" src="{{ getLanguage()->getSvg() ?? '/assets/images/flags/ind.svg' }}"
                                     alt="Header Avatar" height="20">
                             </span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" id="page-header-flag-dropdown">
                             @foreach (App\Models\TranslationLanguage::all() as $list)
                                 <a href="{{ route('translations.change', $list->slug) }}"
-                                    class="dropdown-item notify-item language py-2 @if ($local === $list->slug) active @endif"
+                                    class="dropdown-item notify-item language py-2 @if (App::getLocale() === $list->slug) active @endif"
                                     data-lang="{{ $list->slug }}" title="{{ $list->lang_name }}">
                                     <img src="{{ asset($list->svg) }}" alt="user-image" class="me-2 rounded" height="18">
                                     <span class="align-middle">{{ $list->lang_name }}</span>
@@ -47,7 +44,6 @@
                             <i class='bx bx-fullscreen fs-22'></i>
                         </button>
                     </div>
-
                 @endcan
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <div class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="offcanvas"
@@ -66,6 +62,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <img class="rounded-circle header-profile-user" src="{{ auth()->user()->profile }}"
+                                onerror="this.onerror=null; this.src='{{ asset('assets/images/error400-cover.png') }}';"
                                 alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span
@@ -78,29 +75,30 @@
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
                         <h6 class="dropdown-header">{{ trans('dashboard.welcome') }} {{ auth()->user()->name }} !</h6>
-                        <a class="dropdown-item" href="pages-profile.html">
+                        <a class="dropdown-item" href="{{ route('user.profile') }}">
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">{{ trans('dashboard.profile') }}</span>
                         </a>
-                        <a class="dropdown-item" href="apps-chat.html">
+                        <a class="dropdown-item" href="{{ route('chat.index') }}">
                             <i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">{{ trans('dashboard.messages') }}</span>
                         </a>
-                        <a class="dropdown-item" href="apps-tasks-kanban.html">
+                        <a class="dropdown-item" href="javascript:;">
                             <i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">{{ trans('dashboard.taskboard') }}</span>
                         </a>
-                        <a class="dropdown-item" href="pages-faqs.html">
+                        <a class="dropdown-item" href="javascript:;">
                             <i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">{{ trans('dashboard.help') }}</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="pages-profile-settings.html">
-                            <span class="badge bg-success-subtle text-success mt-1 float-end">New</span>
+                        <a class="dropdown-item" href="javascript:;" data-bs-toggle="offcanvas"
+                            data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas"><span
+                                class="badge bg-success-subtle text-success mt-1 float-end">New</span>
                             <i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">{{ trans('dashboard.settings') }}</span>
                         </a>
-                        <a class="dropdown-item" href="auth-lockscreen-basic.html">
+                        <a class="dropdown-item" href="javascript:;">
                             <i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">{{ trans('dashboard.lock-screen') }} </span>
                         </a>

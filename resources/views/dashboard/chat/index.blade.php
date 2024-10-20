@@ -46,7 +46,7 @@
                                 <div class="position-relative" id="users-chat">
                                     <x-chat.user-chat-top-bar :user="$user" />
                                     <!-- end chat user head -->
-                                    <div class="chat-conversation p-3 p-lg-4 " id="chat-conversation" data-simplebar>
+                                    <div class="chat-conversation p-3 p-lg-4" id="chat-conversation" data-simplebar>
                                         <div id="elmLoader">
                                         </div>
                                         <ul class="list-unstyled chat-conversation-list" id="users-conversation"></ul>

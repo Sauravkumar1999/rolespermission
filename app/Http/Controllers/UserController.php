@@ -11,6 +11,7 @@ use App\DataTables\TableView\UserDataTable;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -95,5 +96,11 @@ class UserController extends Controller
             return response()->json(['status' => true], 200);
         }
         return response()->json(['status' => false], 200);
+    }
+
+    public function Profile()
+    {
+        $user = Auth::user();
+        return view('dashboard.users.profile')->with('user', $user);
     }
 }

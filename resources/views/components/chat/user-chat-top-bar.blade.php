@@ -10,8 +10,8 @@
                     <div class="d-flex align-items-center">
                         <div
                             class="flex-shrink-0 chat-user-img online user-own-img align-self-center me-3 ms-0">
-                            <img src="{{ $user->profile }}" class="rounded-circle avatar-xs" alt="">
-                            <span class="user-status"></span>
+                            <img src="{{ $user->profile }}" class="rounded-circle avatar-xs" alt="" onerror="this.onerror=null; this.src='{{ asset('assets/images/error400-cover.png') }}';">
+                            <span class=""></span>
                         </div>
                         <div class="flex-grow-1 overflow-hidden">
                             <h5 class="text-truncate mb-0 fs-16"><a

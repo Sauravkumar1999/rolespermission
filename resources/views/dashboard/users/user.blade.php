@@ -2,7 +2,7 @@
 @push('header')
     <title>Users</title>
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/datatables.bootstrap5.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/editor-modal-right.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-bs5/editor-modal-right.css') }}" /> --}}
     <link rel="stylesheet" href="{{ asset('assets/libs/datatables/datatables-responsive-bs5/responsive.bootstrap5.css') }}" />
     <link rel="stylesheet"
         href="{{ asset('assets/libs/datatables/datatables-checkboxes-jquery/datatables.checkboxes.css') }}" />
@@ -86,6 +86,10 @@
             let tableEditor = window.LaravelDataTables["{!! $dataTable->getTableAttribute('id') !!}-editor"];
             let table = window.LaravelDataTables['{!! $dataTable->getTableAttribute('id') !!}'];
 
+            Datatablenotifications(tableEditor, 'create', 'Data created successfully');
+            Datatablenotifications(tableEditor, 'edit', 'Data Updated successfully');
+            Datatablenotifications(tableEditor, 'remove', 'Data Deleted successfully');
+
             let filterContainer = $('#{!! $dataTable->getTableAttribute('id') !!}_filter');
             filterContainer.addClass('d-flex');
             $(`<select class="form-select mx-2">
@@ -154,8 +158,7 @@
 
             table.on('click', 'button.editor-permission', function(e) {
                 let tdElements = $(e.target).closest('tr');
-                $('#permission-user-info img').attr('src', tdElements.find('td:eq(5)').find('img').attr(
-                    'src'));
+                $('#permission-user-info img').attr('src', tdElements.find('td:eq(5)').find('img').attr('src'));
                 $('#permission-user-info h5').html(tdElements.find('td:eq(2)').text().trim());
                 $('#permission-user-info p').html(tdElements.find('td:eq(1)').html());
 
@@ -181,7 +184,6 @@
             });
 
             tableEditor.on('initEdit', function(e, node, data) {
-                // console.log(data);
                 setTimeout(() => {
                     $('.DTE_Field_Name_status .DTE_Field_InputControl div input[name="status"]')
                         .each(function() {
@@ -194,10 +196,6 @@
                         $('.DTE_Field_Name_role .DTE_Field_InputControl select').val(data.hidden_role).change();
                 }, 100);
             });
-
-            Datatablenotifications(tableEditor, 'create', 'Data created successfully');
-            Datatablenotifications(tableEditor, 'edit', 'Data Updated successfully');
-            Datatablenotifications(tableEditor, 'remove', 'Data Deleted successfully');
 
             $(document).on('click', '#copy_pwd', function() {
                 const copyText = $(this).data('password');

@@ -1,27 +1,27 @@
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
-import cors from 'cors';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
-
-app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-}));
-
 const server = http.createServer(app);
+
+const PORT = process.env.NODE_SERVER_PORT || 3000;
+const HOST = process.env.NODE_SERVER_HOST || 'localhost';
+const LARAVEL_URL = process.env.APP_URL || 'http://localhost:8000';
+
+
 const io = new Server(server, {
     cors: {
-        origin: "http://127.0.0.1:8000",
+        origin: LARAVEL_URL,
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type"],
-        credentials: true // allow credentials such as cookies or authentication
+        credentials: true
     }
 });
 
-const users = {}; // Map userId -> socketId
+const users = {};
 
 io.on('connection', (socket) => {
     socket.on('userConnected', (auth_user) => {
@@ -29,24 +29,30 @@ io.on('connection', (socket) => {
         io.emit('updateConnectedUsers', Object.keys(users));
     });
 
-    socket.on('sendChat', ({ message, recipientId }) => {
+    socket.on('sendChat', ({ message, recipientId, messageId }) => {
         const recipientSocketId = users[recipientId];
         if (recipientSocketId) {
             io.to(recipientSocketId).emit('broadcastChat', {
                 from: Object.keys(users).find(key => users[key] === socket.id),
-                message
+                message, messageId
             });
-
-            socket.emit('messageStatus', { messageId: message.id, status: 'delivered' });
-        } else {
-            console.log(`User ${recipientId} is not connected.`);
         }
     });
 
-    socket.on('messageSeen', ({ messageId, senderId }) => {
-        const senderSocketId = users[senderId];
+    socket.on('messageSeen', ({ messageId, from }) => {
+        const senderSocketId = users[from];
         if (senderSocketId) {
-            io.to(senderSocketId).emit('messageStatus', { messageId, status: 'seen' });
+            io.to(senderSocketId).emit('messageSeenStatus', { messageId });
+        }
+    });
+
+    socket.on('typing', ({ to, isTyping }) => {
+        const recipientSocketId = users[to];
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit('typing', {
+                from: Object.keys(users).find(key => users[key] === socket.id),
+                isTyping
+            });
         }
     });
 
@@ -54,13 +60,9 @@ io.on('connection', (socket) => {
         const disconnectedUser = Object.keys(users).find(userId => users[userId] === socket.id);
         if (disconnectedUser) {
             delete users[disconnectedUser];
-            console.log(`User disconnected: ${disconnectedUser}`);
             io.emit('updateConnectedUsers', Object.keys(users));
         }
     });
 });
 
-const PORT = 3000;
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+server.listen(PORT, HOST, () => console.log(`Server running on port => http://${HOST}:${PORT}`));

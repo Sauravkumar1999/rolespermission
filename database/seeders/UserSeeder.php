@@ -33,7 +33,11 @@ class UserSeeder extends Seeder
         Role::findByName('user')->syncPermissions($chatPermissions);
         $user->syncRoles('user');
 
-        User::factory(40)->create();
+        User::factory(40)
+        ->create()
+        ->each(function ($user) {
+            $user->syncRoles('user');
+        });
     }
 
     private function getCommonUserData(): array

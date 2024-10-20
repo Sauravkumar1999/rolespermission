@@ -18,6 +18,8 @@ class PermissionDataTableEditor extends DataTablesEditor
     {
         return [
             'name' => 'required|max:255',
+            'display_name' => 'required|min:5',
+            'desc' => 'required|min:5',
         ];
     }
 
@@ -28,6 +30,8 @@ class PermissionDataTableEditor extends DataTablesEditor
     {
         return [
             'name' => 'sometimes|required|max:255',
+            'display_name' => 'required|min:5',
+            'desc' => 'required|min:5',
         ];
     }
 
@@ -55,6 +59,17 @@ class PermissionDataTableEditor extends DataTablesEditor
     {
         // do something after saving the model
 
+        return $model;
+    }
+
+    public function updating(Model $model, array $data)
+    {
+        unset($data['name']);
+        return $data;
+    }
+
+    public function updated(Model $model, array $data)
+    {
         return $model;
     }
 }

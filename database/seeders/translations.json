@@ -8,7 +8,7 @@
         {"key": "svg", "text": {"en": "Svg", "hn": "Svg"}}
     ],
     "user": [
-        {"key": "userall", "text": {"en": "Users", "hn": "उपयोगकर्तासभी"}},
+        {"key": "users", "text": {"en": "Users", "hn": "उपयोगकर्तासभी"}},
         {"key": "user", "text": {"en": "User", "hn": "उपयोगकर्ता"}},
         {"key": "password", "text": {"en": "Password", "hn": "पासवर्ड"}},
         {"key": "generate", "text": {"en": "Generate", "hn": "उत्पन्न"}},
