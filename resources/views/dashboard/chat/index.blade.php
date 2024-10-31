@@ -7,10 +7,10 @@
             border-top-right-radius: 0 !important;
         }
 
-        .chat-conversation .right .conversation-list .ctext-wrap .ctext-wrap-content {
+        /* .chat-conversation .right .conversation-list .ctext-wrap .ctext-wrap-content {
             background-color: rgb(30 131 25 / 15%);
             color: #474848;
-        }
+        } */
 
         .chat-conversation .conversation-list .ctext-wrap-content {
             padding: 4px 10px;
@@ -21,12 +21,12 @@
             box-shadow: 0 5px 10px rgba(30, 32, 37, .12);
         }
 
-        .chat-conversation .conversation-list .ctext-wrap {
+        /* .chat-conversation .conversation-list .ctext-wrap {
             margin-bottom: 0px;
-        }
+        } */
 
         small.time {
-            font-size: 8px;
+            font-size: 9px;
         }
     </style>
 @endpush
@@ -89,5 +89,6 @@
 @endsection
 @push('footer')
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <script src="{{ asset('/assets/js/custom/chat.js') }}"></script>
+    <script src="{{ asset('/assets/js/custom/chat-page/chat.js') }}"></script>
+    <script src="{{ asset('/assets/js/custom/chat-page/page.js') }}"></script>
 @endpush

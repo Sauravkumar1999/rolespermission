@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaViewController;
+use App\Http\Controllers\UnAuthemticatedController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [UnAuthemticatedController::class, 'welcome']);
 
 Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
@@ -25,8 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/home', 'index')->name('home');
         Route::get('/get-expire', 'getSessionExpiration')->name('getSessionExpiration');
     });
-    Route::prefix('user')->controller(App\Http\Controllers\UserController::class)
-    ->group(function () {
+    Route::prefix('user')->controller(App\Http\Controllers\UserController::class)->group(function () {
 
         // -------- User Routes
         Route::middleware('permission:user.show')->get('/', 'user')->name('user');

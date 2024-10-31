@@ -21,7 +21,7 @@
                                     aria-controls="userProfileCanvasExample">{{ $user->name }}</a>
                             </h5>
                             <p class="text-truncate text-muted fs-14 mb-0 userStatus">
-                                <small>Online</small>
+                                <small>Offline</small>
                             </p>
                         </div>
                     </div>

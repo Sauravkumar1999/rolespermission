@@ -1,7 +1,27 @@
 <!doctype html>
-<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
-    data-sidebar-image="none" data-preloader="disable" data-bs-theme="data_bs_theme" data-layout-width="fluid"
-    data-layout-position="fixed" data-layout-style="default" data-sidebar-visibility="show">
+@php
+    $setting = auth()?->user()?->setting ?? []; // Default to an empty array if not found
+
+    $dataLayout = 'vertical';
+    $dataTopbar = $setting['data_topbar'] ?? 'light';
+    $dataSidebar = $setting['data_sidebar'] ?? 'dark';
+    $dataSidebarSize = 'lg';
+    $dataSidebarSize = 'lg';
+    $dataSidebarImage = $setting['data_sidebar_image'] ?? 'none';
+    $dataPreloader = $setting['data_preloader'] ?? 'disable';
+    $dataBsTheme = $setting['data_bs_theme'] ?? 'light';
+    $dataLayoutWidth = $setting['data_layout_width'] ?? 'fluid';
+    $dataLayoutPosition = $setting['data_layout_position'] ?? 'fixed';
+    $dataLayoutStyle = $setting['data_layout_style'] ?? 'default';
+    $dataSidebarVisibility = $setting['data_sidebar_visibility'] ?? 'show';
+    $humburger = $setting['humburger'] ?? 'show|simplebar-scrollable-y';
+@endphp
+
+<html lang="en" data-layout="{{ $dataLayout }}" data-topbar="{{ $dataTopbar }}" data-sidebar="{{ $dataSidebar }}"
+    data-sidebar-size="{{ $dataSidebarSize }}" data-sidebar-image="{{ $dataSidebarImage }}"
+    data-preloader="{{ $dataPreloader }}" data-bs-theme="{{ $dataBsTheme }}" data-layout-width="{{ $dataLayoutWidth }}"
+    data-layout-position="{{ $dataLayoutPosition }}" data-layout-style="{{ $dataLayoutStyle }}"
+    data-sidebar-visibility="{{ $dataSidebarVisibility }}">
 
 <head>
     <meta charset="utf-8" />
@@ -15,7 +35,7 @@
     @stack('header')
 </head>
 
-<body>
+<body class="two-column-menu">
     <div id="layout-wrapper">
         <x-header></x-header>
         <x-sidebar></x-sidebar>

@@ -267,7 +267,17 @@
                     }),
                     E();
             }),
-            document.getElementById("topnav-hamburger-icon") && document.getElementById("topnav-hamburger-icon").addEventListener("click", O);
+            document.getElementById("topnav-hamburger-icon") &&
+            document.getElementById("topnav-hamburger-icon").addEventListener("click", () => {
+                const layout03 = document.getElementById("customizer-layout03");
+                const layout01 = document.getElementById("customizer-layout01");
+
+                if (layout03.checked) {
+                    layout01.click();  // Click layout01 if layout03 is checked
+                } else {
+                    layout03.click();  // Otherwise, click layout03
+                }
+            });
         var e = sessionStorage.getItem("defaultAttribute"),
             e = JSON.parse(e),
             t = document.documentElement.clientWidth;

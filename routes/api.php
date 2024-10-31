@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ChatController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('users', function () {
     return User::get(['id', 'profile', 'name']);
+});
+Route::controller(ChatController::class)->prefix('chat')->group(function () {
+    Route::get('/get/{sender_id}/{recipientId}', 'index');
+    Route::post('store', 'chatStore');
+    Route::get('mark/{message_id}/seen', 'markAsSeen');
 });

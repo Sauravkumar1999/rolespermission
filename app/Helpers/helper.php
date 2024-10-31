@@ -64,3 +64,19 @@ if (!function_exists('datatable_lang')) {
         return $override ? array_replace($langs, $override) : $langs;
     }
 }
+if (!function_exists('envUpdate')) {
+    function envUpdate($key, $value, $comma = false)
+    {
+        $path = base_path('.env');
+        $value = trim($value);
+        $env = $comma ? '"' . env($key) . '"' : env($key);
+
+        if (file_exists($path)) {
+            file_put_contents($path, str_replace(
+                $key . '=' . $env,
+                $key . '=' . $value,
+                file_get_contents($path)
+            ));
+        }
+    }
+}
