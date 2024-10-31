@@ -6,7 +6,7 @@ $(() => {
     socket.on('connect', () => {
         socket.emit('userConnected', { authUserId: authUserId, authToken: getAuthToken() });
         notifyNewMessage("You are connected to the chat server")
-        fetchMessages();
+        // fetchMessages();
     });
 
     socket.on('updateConnectedUsers', (connectedUsers) => {
