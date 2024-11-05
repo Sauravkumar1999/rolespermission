@@ -155,6 +155,10 @@ function getdmId() {
     return $('.chat-leftsidebar #chat-list li.bg-success-subtle').data('dm-id');
 }
 
+function getdmId() {
+    return $('.chat-leftsidebar #chat-list li.bg-success-subtle').data('dm-id');
+}
+
 function getAuthId() {
     return $('input[name="auth_user_id"]').val();
 }
