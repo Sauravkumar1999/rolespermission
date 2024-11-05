@@ -31,17 +31,17 @@ io.on('connection', (socket) => {
         io.emit('updateConnectedUsers', Object.keys(users));
     });
 
-    socket.on('sendChat', async ({ message, recipientId, messageId }) => {
+    socket.on('sendChat', async ({ message, recipientId, messageId, directMessageId }) => {
         const senderId = Object.keys(users).find(key => users[key].socketId === socket.id);
         const senderToken = users[senderId]?.authToken;
-
         if (senderToken) {
             try {
-                let fetch = await axios.post(`${LARAVEL_API_URL}/chat/store`, {
+                await axios.post(`${LARAVEL_API_URL}/chat/store`, {
+                    direct_message_id: directMessageId,
                     sender_id: senderId,
                     recipient_id: recipientId,
                     message,
-                    message_id: messageId
+                    message_id: messageId,
                 }, {
                     headers: {
                         'Authorization': `Bearer ${senderToken}`
@@ -95,11 +95,22 @@ io.on('connection', (socket) => {
     });
 
     socket.on('typing', ({ to, isTyping }) => {
-        const recipientSocketId = users[to].socketId;
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('typing', {from: Object.keys(users).find(key => users[key].socketId === socket.id),isTyping});
+        try {
+            const recipientSocketId = users[to]?.socketId;
+            if (!recipientSocketId) {
+                throw new Error(`Recipient with ID ${to} is not connected.`);
+            }
+
+            const from = Object.keys(users).find(key => users[key].socketId === socket.id);
+            if (!from) {
+                throw new Error(`Sender not found for socket ID ${socket.id}`);
+            }
+            io.to(recipientSocketId).emit('typing', { from, isTyping });
+        } catch (error) {
+            socket.emit('error', { message: "An error occurred while updating typing status." });
         }
     });
+
 
     socket.on('disconnect', () => {
         const disconnectedUser = Object.keys(users).find(userId => users[userId].socketId === socket.id);
