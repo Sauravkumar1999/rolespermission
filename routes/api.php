@@ -23,7 +23,7 @@ Route::get('users', function () {
     return User::get(['id', 'profile', 'name']);
 });
 Route::controller(ChatController::class)->prefix('chat')->group(function () {
-    Route::get('/get/{sender_id}/{recipientId}', 'index');
+    Route::get('/get/{dmId}/{sender_id}', 'index');
     Route::post('store', 'chatStore');
     Route::get('mark/{message_id}/seen', 'markAsSeen');
 });

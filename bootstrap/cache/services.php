@@ -15,10 +15,10 @@
     11 => 'Illuminate\\Mail\\MailServiceProvider',
     12 => 'Illuminate\\Notifications\\NotificationServiceProvider',
     13 => 'Illuminate\\Pagination\\PaginationServiceProvider',
-    14 => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
-    15 => 'Illuminate\\Pipeline\\PipelineServiceProvider',
-    16 => 'Illuminate\\Queue\\QueueServiceProvider',
-    17 => 'Illuminate\\Redis\\RedisServiceProvider',
+    14 => 'Illuminate\\Pipeline\\PipelineServiceProvider',
+    15 => 'Illuminate\\Queue\\QueueServiceProvider',
+    16 => 'Illuminate\\Redis\\RedisServiceProvider',
+    17 => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
     18 => 'Illuminate\\Session\\SessionServiceProvider',
     19 => 'Illuminate\\Translation\\TranslationServiceProvider',
     20 => 'Illuminate\\Validation\\ValidationServiceProvider',
@@ -27,31 +27,33 @@
     23 => 'BeyondCode\\LaravelWebSockets\\WebSocketsServiceProvider',
     24 => 'Laravel\\Sail\\SailServiceProvider',
     25 => 'Laravel\\Sanctum\\SanctumServiceProvider',
-    26 => 'Laravel\\Tinker\\TinkerServiceProvider',
-    27 => 'Laravel\\Ui\\UiServiceProvider',
-    28 => 'Livewire\\LivewireServiceProvider',
-    29 => 'Carbon\\Laravel\\ServiceProvider',
-    30 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    31 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    32 => 'Plank\\Mediable\\MediableServiceProvider',
-    33 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    34 => 'Spatie\\Permission\\PermissionServiceProvider',
-    35 => 'Spatie\\TranslationLoader\\TranslationServiceProvider',
-    36 => 'Yajra\\DataTables\\ButtonsServiceProvider',
-    37 => 'Yajra\\DataTables\\EditorServiceProvider',
-    38 => 'Yajra\\DataTables\\ExportServiceProvider',
-    39 => 'Yajra\\DataTables\\FractalServiceProvider',
-    40 => 'Yajra\\DataTables\\HtmlServiceProvider',
-    41 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    42 => 'Spatie\\TranslationLoader\\TranslationServiceProvider',
-    43 => 'App\\Providers\\AppServiceProvider',
-    44 => 'App\\Providers\\AuthServiceProvider',
-    45 => 'App\\Providers\\BroadcastServiceProvider',
-    46 => 'App\\Providers\\EventServiceProvider',
-    47 => 'App\\Providers\\RouteServiceProvider',
-    48 => 'Yajra\\DataTables\\DataTablesServiceProvider',
-    49 => 'Yajra\\DataTables\\ButtonsServiceProvider',
-    50 => 'Yajra\\DataTables\\EditorServiceProvider',
+    26 => 'Laravel\\Socialite\\SocialiteServiceProvider',
+    27 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    28 => 'Laravel\\Ui\\UiServiceProvider',
+    29 => 'Livewire\\LivewireServiceProvider',
+    30 => 'Carbon\\Laravel\\ServiceProvider',
+    31 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    32 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    33 => 'Plank\\Mediable\\MediableServiceProvider',
+    34 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
+    35 => 'Spatie\\Permission\\PermissionServiceProvider',
+    36 => 'Spatie\\TranslationLoader\\TranslationServiceProvider',
+    37 => 'Yajra\\DataTables\\ButtonsServiceProvider',
+    38 => 'Yajra\\DataTables\\EditorServiceProvider',
+    39 => 'Yajra\\DataTables\\ExportServiceProvider',
+    40 => 'Yajra\\DataTables\\FractalServiceProvider',
+    41 => 'Yajra\\DataTables\\HtmlServiceProvider',
+    42 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    43 => 'Spatie\\TranslationLoader\\TranslationServiceProvider',
+    44 => 'App\\Providers\\AppServiceProvider',
+    45 => 'App\\Providers\\AuthServiceProvider',
+    46 => 'App\\Providers\\BroadcastServiceProvider',
+    47 => 'App\\Providers\\EventServiceProvider',
+    48 => 'App\\Providers\\RouteServiceProvider',
+    49 => 'Yajra\\DataTables\\DataTablesServiceProvider',
+    50 => 'Yajra\\DataTables\\ButtonsServiceProvider',
+    51 => 'Yajra\\DataTables\\EditorServiceProvider',
+    52 => 'Laravel\\Socialite\\SocialiteServiceProvider',
   ),
   'eager' => 
   array (
@@ -157,7 +159,6 @@
     'Illuminate\\Console\\Scheduling\\ScheduleInterruptCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Database\\Console\\ShowModelCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\StorageLinkCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
-    'Illuminate\\Foundation\\Console\\StorageUnlinkCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\UpCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\ViewCacheCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
     'Illuminate\\Foundation\\Console\\ViewClearCommand' => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
@@ -215,8 +216,6 @@
     'mail.manager' => 'Illuminate\\Mail\\MailServiceProvider',
     'mailer' => 'Illuminate\\Mail\\MailServiceProvider',
     'Illuminate\\Mail\\Markdown' => 'Illuminate\\Mail\\MailServiceProvider',
-    'auth.password' => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
-    'auth.password.broker' => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
     'Illuminate\\Contracts\\Pipeline\\Hub' => 'Illuminate\\Pipeline\\PipelineServiceProvider',
     'pipeline' => 'Illuminate\\Pipeline\\PipelineServiceProvider',
     'queue' => 'Illuminate\\Queue\\QueueServiceProvider',
@@ -226,6 +225,8 @@
     'queue.worker' => 'Illuminate\\Queue\\QueueServiceProvider',
     'redis' => 'Illuminate\\Redis\\RedisServiceProvider',
     'redis.connection' => 'Illuminate\\Redis\\RedisServiceProvider',
+    'auth.password' => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
+    'auth.password.broker' => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
     'translator' => 'Spatie\\TranslationLoader\\TranslationServiceProvider',
     'translation.loader' => 'Spatie\\TranslationLoader\\TranslationServiceProvider',
     'validator' => 'Illuminate\\Validation\\ValidationServiceProvider',
@@ -233,6 +234,7 @@
     'Illuminate\\Contracts\\Validation\\UncompromisedVerifier' => 'Illuminate\\Validation\\ValidationServiceProvider',
     'Laravel\\Sail\\Console\\InstallCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'Laravel\\Sail\\Console\\PublishCommand' => 'Laravel\\Sail\\SailServiceProvider',
+    'Laravel\\Socialite\\Contracts\\Factory' => 'Laravel\\Socialite\\SocialiteServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
   ),
   'when' => 
@@ -255,9 +257,6 @@
     'Illuminate\\Mail\\MailServiceProvider' => 
     array (
     ),
-    'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider' => 
-    array (
-    ),
     'Illuminate\\Pipeline\\PipelineServiceProvider' => 
     array (
     ),
@@ -267,6 +266,9 @@
     'Illuminate\\Redis\\RedisServiceProvider' => 
     array (
     ),
+    'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider' => 
+    array (
+    ),
     'Illuminate\\Translation\\TranslationServiceProvider' => 
     array (
     ),
@@ -274,6 +276,9 @@
     array (
     ),
     'Laravel\\Sail\\SailServiceProvider' => 
+    array (
+    ),
+    'Laravel\\Socialite\\SocialiteServiceProvider' => 
     array (
     ),
     'Laravel\\Tinker\\TinkerServiceProvider' => 

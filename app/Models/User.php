@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -19,7 +20,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'phone', 'profile', 'status', 'password',];
+    protected $fillable = ['google_id', 'name', 'email', 'phone', 'profile', 'status', 'password', 'email_verified_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,13 +41,17 @@ class User extends Authenticatable
         return $this->hasOne(Setting::class);
     }
 
-    public function sentMessages()
+    public function directMessages(): HasMany
     {
-        return $this->hasMany(Chat::class, 'sender_id');
+        return $this->hasMany(DirectMessage::class, 'user_one_id')
+            ->orWhere('user_two_id', $this->id);
     }
 
-    public function receivedchats()
+    /**
+     * Get all chat messages sent by the user.
+     */
+    public function chats(): HasMany
     {
-        return $this->hasMany(Chat::class, 'recipient_id');
+        return $this->hasMany(Chat::class, 'sender_id');
     }
 }

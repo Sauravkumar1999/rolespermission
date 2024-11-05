@@ -68,7 +68,7 @@
                                 <span
                                     class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ auth()->user()->name }}</span>
                                 <span
-                                    class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{ auth()->user()->roles->first()->name }}</span>
+                                    class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{ auth()->user()->roles?->first()?->name }}</span>
                             </span>
                         </span>
                     </button>

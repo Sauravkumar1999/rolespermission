@@ -20,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [UnAuthemticatedController::class, 'welcome']);
 
 Auth::routes();
+Route::group(['prefix' => 'auth', 'controller' => UnAuthemticatedController::class], function () {
+    Route::get('/google-auth', 'googleAuth')->name('auth.google');
+    Route::get('/google-callback', 'googleCallback')->name('auth.google.callback');
+});
 Route::group(['middleware' => 'auth'], function () {
     Route::controller(App\Http\Controllers\HomeController::class)->group(function () {
         Route::get('/home', 'index')->name('home');

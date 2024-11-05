@@ -2,16 +2,22 @@ $(() => {
     const socket = io(getNodeServerURL());
     const authUserId = getAuthId();
     const recipientUserId = getSelectedRecipientId();
+    const recipientUserInfo = getRecipientInfo();
 
     socket.on('connect', () => {
         socket.emit('userConnected', { authUserId: authUserId, authToken: getAuthToken() });
-        notifyNewMessage("You are connected to the chat server")
-        fetchMessages();
+
+        if (recipientUserId != undefined) {
+            notifyMessage("You are connected with ", recipientUserInfo.name, 'success')
+            fetchMessages();
+        } else {
+            notifyMessage("You are connected to the chat server")
+        }
     });
 
     socket.on('updateConnectedUsers', (connectedUsers) => {
-        updateUserStatus($('#chat-list li[data-user-id]'), connectedUsers, true);
-        updateUserStatus($('#contact-list li[data-user-id]'), connectedUsers, false);
+        updateUserStatus($('#chat-list li[data-user-id]'), connectedUsers);
+        updateUserStatus($('#contact-list li[data-user-id]'), connectedUsers);
     });
 
     socket.on('typing', ({ from, isTyping }) => {
@@ -63,7 +69,7 @@ $(() => {
 let typingTimeout;
 
 function sendMessage(socket, messageText, recipientId, messageId) {
-    socket.emit('sendChat', { message: messageText, recipientId, messageId });
+    socket.emit('sendChat', { message: messageText, recipientId, messageId, directMessageId: getdmId() });
 }
 
 function addToView(messageText, isSentByCurrentUser = false, status = 'sent', messageId = generateUniqueId()) {
@@ -102,19 +108,24 @@ function updateMessageStatus(messageId, status) {
     if (icon) icon.className = `${getIconClass(status)} ${getIconColor(status)}`;
 }
 
-function updateUserStatus(elements, connectedUsers, isChatList) {
+function updateUserStatus(elements, connectedUsers) {
+    let isConnected = getSelectedRecipientId() ? connectedUsers.includes(getSelectedRecipientId().toString()) : false;
+    let inboxHeaderImg = $('.user-chat-topbar .chat-user-img').next().find('p')
+
+    if (inboxHeaderImg) {
+        toggleClass($('.user-chat-topbar .chat-user-img span'), 'user-status', isConnected);
+        isConnected ? inboxHeaderImg.html('<span>Online</span>') : inboxHeaderImg.html('<span>Offline</span>');
+    }
+
     elements.each(function () {
         const userId = $(this).data('user-id');
         const statusSpan = $(this).find('.chat-user-img span');
-        const isConnected = connectedUsers.includes(userId.toString());
+        const inboxHeaderImg = $(this).find('.chat-user-text small');
+        isConnected = connectedUsers.includes(userId.toString());
+
+        isConnected ? inboxHeaderImg.html('<span>Online</span>') : inboxHeaderImg.html('<span>Offline</span>');
 
         toggleClass(statusSpan, 'user-status', isConnected);
-
-        if (isChatList && $(this).hasClass('bg-success-subtle')) {
-            toggleClass($('.user-chat-topbar .chat-user-img span'), 'user-status', isConnected);
-            let topBarChat =$('.user-chat-topbar .chat-user-img').next().find('p')
-            isConnected ? topBarChat.html('<span>Online</span>') : topBarChat.html('<span>Offline</span>');
-        }
     });
 }
 
@@ -131,8 +142,17 @@ function scrollToBottom() {
         document.getElementById("users-conversation").scrollHeight;
 }
 
+function getRecipientInfo() {
+    let info = $('input[name="user_info"]').val();
+    return JSON.parse(info);
+}
+
 function getSelectedRecipientId() {
-    return $('.chat-leftsidebar #chats .bg-success-subtle').data('user-id');
+    return getRecipientInfo()?.id;
+}
+
+function getdmId() {
+    return $('.chat-leftsidebar #chat-list li.bg-success-subtle').data('dm-id');
 }
 
 function getAuthId() {
@@ -142,12 +162,11 @@ function getAuthToken() {
     return $('input[name="auth_token"]').val();
 }
 function getNodeServerURL() {
-    return $('input[name="node_server_url"]').val();
+    return location.protocol + "//" + location.hostname + ":3000";
 }
 function getLaravelAppURL() {
-    return $('input[name="laravel_server_url"]').val();
+    return location.origin;
 }
-
 function showTypingStatus(isTyping) {
     let element = $('.user-chat-topbar .chat-user-img').next().find('.userStatus')
     if (element) {
@@ -169,15 +188,15 @@ function generateUniqueId() {
 
 async function fetchMessages() {
     try {
-        const recipientId = getSelectedRecipientId();
-        const senderId = getAuthId();
-        fetch(`${getLaravelAppURL()}/api/chat/get/${senderId}/${recipientId}`)
+        const dmId = getdmId();
+        const authId = getAuthId();
+        fetch(`${getLaravelAppURL()}/api/chat/get/${dmId}/${authId}`)
             .then(data => data.json())
             .then(response => {
                 let messages = response.data.data
                 if (response.success) {
                     messages.forEach(msg => {
-                        let isSendedByMe = msg.sender_id == senderId;
+                        let isSendedByMe = msg.sender_id == authId;
                         addToView(msg.message, isSendedByMe, msg.status, msg.message_id);
                     });
                 }
@@ -193,13 +212,13 @@ async function fetchMessages() {
     }
 }
 
-function notifyNewMessage(message, from) {
+function notifyMessage(message, from, bg = "info") {
     Toastify({
         text: `${message} ${from ? 'from ' + from : ''}`,
         gravity: "top",
         position: "right",
         duration: 3000,
         close: true,
-        className: "bg-info"
+        className: "bg-" + bg
     }).showToast();
 }

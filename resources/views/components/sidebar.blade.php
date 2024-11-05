@@ -76,7 +76,7 @@
                 @endcan
                 @can('chat.show')
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('chat.index') ? ' active' : '' }}" href="{{ route('chat.index') }}">
+                        <a class="nav-link menu-link {{ request()->is('chat*') ? ' active' : '' }}" href="{{ route('chat.index') }}">
                             <i class="ri-wechat-line ani-breath"></i> <span
                                 data-key="t-dashboard">{{ trans('chat.chat') }}</span>
                         </a>
