@@ -11,7 +11,8 @@
                         <div class="col-12">
                             <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                                 <div class="flex-grow-1">
-                                    <h4 class="fs-16 mb-1">Good Morning, {{ auth()->user()->name }}!</h4>
+                                    @php($greeting = now()->hour < 12 ? 'Good Morning' : (now()->hour < 18 ? 'Good Afternoon' : 'Good Evening'))
+                                    <h4 class="fs-16 mb-1">{{ $greeting }}, {{ auth()->user()->name }}!</h4>
                                     <p class="text-muted mb-0">Here's what's happening with your store today.</p>
                                 </div>
                                 <div class="mt-3 mt-lg-0">

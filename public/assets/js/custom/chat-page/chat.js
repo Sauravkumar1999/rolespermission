@@ -2,11 +2,17 @@ $(() => {
     const socket = io(getNodeServerURL());
     const authUserId = getAuthId();
     const recipientUserId = getSelectedRecipientId();
+    const recipientUserInfo = getRecipientInfo();
 
     socket.on('connect', () => {
         socket.emit('userConnected', { authUserId: authUserId, authToken: getAuthToken() });
-        notifyNewMessage("You are connected to the chat server")
-        fetchMessages();
+
+        if (recipientUserId != undefined) {
+            notifyMessage("You are connected with ", recipientUserInfo.name, 'success')
+            fetchMessages();
+        } else {
+            notifyMessage("You are connected to the chat server")
+        }
     });
 
     socket.on('updateConnectedUsers', (connectedUsers) => {
@@ -136,8 +142,13 @@ function scrollToBottom() {
         document.getElementById("users-conversation").scrollHeight;
 }
 
+function getRecipientInfo() {
+    let info = $('input[name="user_info"]').val();
+    return JSON.parse(info);
+}
+
 function getSelectedRecipientId() {
-    return $('.chat-leftsidebar #chats .bg-success-subtle').data('user-id');
+    return getRecipientInfo()?.id;
 }
 
 function getdmId() {
@@ -151,12 +162,11 @@ function getAuthToken() {
     return $('input[name="auth_token"]').val();
 }
 function getNodeServerURL() {
-    return $('input[name="node_server_url"]').val();
+    return location.protocol + "//" + location.hostname + ":3000";
 }
 function getLaravelAppURL() {
-    return $('input[name="laravel_server_url"]').val();
+    return location.origin;
 }
-
 function showTypingStatus(isTyping) {
     let element = $('.user-chat-topbar .chat-user-img').next().find('.userStatus')
     if (element) {
@@ -202,13 +212,13 @@ async function fetchMessages() {
     }
 }
 
-function notifyNewMessage(message, from) {
+function notifyMessage(message, from, bg = "info") {
     Toastify({
         text: `${message} ${from ? 'from ' + from : ''}`,
         gravity: "top",
         position: "right",
         duration: 3000,
         close: true,
-        className: "bg-info"
+        className: "bg-" + bg
     }).showToast();
 }

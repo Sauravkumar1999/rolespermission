@@ -33,7 +33,8 @@
                                 <div class="position-relative auth-pass-inputgroup mb-3">
                                     <input type="password" class="form-control pe-5 password-input"
                                         placeholder="Enter password" name="password">
-                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
+                                    <button
+                                        class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
                                         type="button">
                                         <i class="ri-eye-fill align-middle"></i>
                                     </button>
@@ -47,6 +48,10 @@
                                     id="remember" name="remember">
                                 <label class="form-check-label" for="remember">Remember me</label>
                             </div>
+                            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                href="{{ route('password.request') }}">
+                                {{ __('Forgot your password?') }}
+                            </a>
                             <div class="mt-4">
                                 <button class="btn btn-success w-100" type="submit">Sign In</button>
                             </div>
@@ -55,14 +60,19 @@
                                     <h5 class="fs-13 mb-4 title">Sign In with</h5>
                                 </div>
                                 <div>
-                                    <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i
-                                            class="ri-facebook-fill fs-16"></i></button>
-                                    <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i
-                                            class="ri-google-fill fs-16"></i></button>
-                                    <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i
-                                            class="ri-github-fill fs-16"></i></button>
-                                    <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i
-                                            class="ri-twitter-fill fs-16"></i></button>
+                                    <button type="button" class="btn btn-primary btn-icon waves-effect waves-light">
+                                        <i class="ri-facebook-fill fs-16"></i>
+                                    </button>
+                                    <a href="{{ route('auth.google') }}"
+                                        class="btn btn-danger btn-icon waves-effect waves-light">
+                                        <i class="ri-google-fill fs-16"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-dark btn-icon waves-effect waves-light">
+                                        <i class="ri-github-fill fs-16"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-icon waves-effect waves-light">
+                                        <i class="ri-twitter-fill fs-16"></i>
+                                    </button>
                                 </div>
                             </div>
                         </form>

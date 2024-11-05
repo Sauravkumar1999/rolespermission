@@ -17,8 +17,8 @@
             <i class="ri-search-2-line search-icon"></i>
             <input type="hidden" name="auth_user_id" value="{{ auth()->user()->id }}">
             <input type="hidden" name="node_server_url" value="{{ env('NODE_SERVER_URL') }}">
-            <input type="hidden" name="laravel_server_url" value="{{ env('APP_URL') }}">
             <input type="hidden" name="auth_token" value="{{ session('_token') }}">
+            <input type="hidden" name="user_info" value="{{ json_encode($user) }}">
         </div>
     </div>
 

@@ -136,7 +136,8 @@
                                 <label for="password-confirm" class="form-label">Password Confirm</label>
                                 <div class="position-relative auth-pass-inputgroup">
                                     <input type="password" name="password_confirmation" class="form-control pe-5"
-                                        onpaste="return false" placeholder="Enter password confirm" id="password-confirm" required>
+                                        onpaste="return false" placeholder="Enter password confirm" id="password-confirm"
+                                        required>
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -174,8 +175,10 @@
                                 <div>
                                     <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i
                                             class="ri-facebook-fill fs-16"></i></button>
-                                    <button type="button" class="btn btn-danger btn-icon waves-effect waves-light"><i
-                                            class="ri-google-fill fs-16"></i></button>
+                                    <a href="{{ route('auth.google') }}"
+                                        class="btn btn-danger btn-icon waves-effect waves-light">
+                                        <i class="ri-google-fill fs-16"></i>
+                                    </a>
                                     <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i
                                             class="ri-github-fill fs-16"></i></button>
                                     <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i
