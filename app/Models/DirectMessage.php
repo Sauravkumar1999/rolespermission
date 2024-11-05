@@ -25,6 +25,11 @@ class DirectMessage extends Model
         return $this->belongsTo(User::class, 'user_two_id');
     }
 
+    public function getOtherUser(int $authUserId)
+    {
+        return $this->user_one_id === $authUserId ? $this->userTwo : $this->userOne;
+    }
+
     /**
      * Get all chat messages related to this direct message.
      */

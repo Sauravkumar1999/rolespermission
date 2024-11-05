@@ -2,6 +2,7 @@
 
 namespace App\View\Components\chat;
 
+use App\Models\DirectMessage;
 use App\Models\User;
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -21,17 +22,25 @@ class leftsidebar extends Component
         $this->users = User::whereNotIn('id', [auth()->user()->id])->orderBy('name')->get(['id', 'profile', 'name']);
         $authUserId = auth()->id();
 
-        $this->chats = \App\Models\DirectMessage::where(function ($query) use ($authUserId) {
+        $this->chats = DirectMessage::where(function ($query) use ($authUserId) {
             $query->where('user_one_id', $authUserId)
                 ->orWhere('user_two_id', $authUserId);
         })
-            ->with(['userOne', 'userTwo', 'chats' => function ($q) {
-                $q->latest();
-            }])
+            ->with([
+                'userOne' => fn($query) => $query->select('id', 'name', 'profile'),
+                'userTwo' => fn($query) => $query->select('id', 'name', 'profile'),
+            ])
             ->get()
-            ->sortByDesc(function ($directMessage) {
-                return $directMessage->chats->first()->created_at ?? now();
-            });
+            ->map(function ($chat) use ($authUserId, $user) {
+                $otherUser = $chat->user_one_id === $authUserId ? $chat->userTwo : $chat->userOne;
+                $otherUser->last_message = $chat->chats->first()->created_at ?? null;
+                $otherUser->inbox_user = $user && $user->id === $otherUser->id;
+                $otherUser->dm = $chat->id;
+
+                return $otherUser;
+            })
+            ->unique('id')
+            ->sortByDesc('last_message');
     }
 
     /**

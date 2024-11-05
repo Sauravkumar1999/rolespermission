@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
+use App\Models\DirectMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,38 +13,37 @@ class ChatController extends Controller
     public function chatStore(Request $request)
     {
         $validated = Validator::make($request->all(), [
-            'sender_id'    => 'required|exists:users,id',
-            'recipient_id' => 'required|exists:users,id',
-            'message'      => 'required|string',
-            'message_id'   => 'required|string',
+            'direct_message_id' => 'required|exists:direct_messages,id', // Corrected table name
+            'sender_id'         => 'required|exists:users,id',
+            'message'           => 'required|string',
+            'message_id'        => 'required|string',
         ]);
-        if ($validated->fails()) {
-            return response()->json(['success' => false, 'error' => $validated->errors()], 400);
-        }
+        if ($validated->fails()) response()->json(['success' => false, 'error' => $validated->errors()], 400);
         try {
-            Chat::create($validated->validated());
+            $directMessage = DirectMessage::findOrFail($validated->validated()['direct_message_id']);
+            $directMessage->chats()->create($validated->validated());
+
             return response()->json(['success' => true], 200);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => $th->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'An error occurred: ' . $e->getMessage()], 500);
         }
     }
 
-    public function index($sender_id, $recipientId)
+
+    public function index($dmId, $sender_id)
     {
         try {
-            $data = Chat::where(function ($query) use ($sender_id, $recipientId) {
-                $query->where('sender_id', $sender_id)
-                    ->where('recipient_id', $recipientId);
-            })->orWhere(function ($query) use ($sender_id, $recipientId) {
-                $query->where('sender_id', $recipientId)
-                    ->where('recipient_id', $sender_id);
-            })->latest()->limit(20)->get();
+            $data = Chat::where('direct_message_id', $dmId)->limit(20)->get();
+            Chat::where('direct_message_id', $dmId)
+                // ->where('sender_id', '!=', $sender_id)
+                ->where('status', '!=', 'seen')->get()->map(function ($a) use ($sender_id) {
+                    if ($a->sender_id != $sender_id) {
+                        $a->status = 'seen';
+                        $a->save();
+                    }
+                });
 
-            Chat::whereIn('id', $data->where('sender_id', $sender_id)->pluck('id'))
-                ->where('status', '!=', 'seen')
-                ->update(['status' => 'seen']);
-
-            $updatedData = Chat::whereIn('id', $data->pluck('id'))->latest()->paginate(20);
+            $updatedData = Chat::whereIn('id', $data->pluck('id'))->paginate(20);
 
             return response()->json(['success' => true, 'data' => $updatedData], 200);
         } catch (\Throwable $th) {
