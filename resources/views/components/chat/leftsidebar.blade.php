@@ -5,10 +5,11 @@
                 <h5 class="mb-4">Chats</h5>
             </div>
             <div class="flex-shrink-0">
-                <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom"
-                    aria-label="Add Contact" data-bs-original-title="Add Contact">
-                    <button type="button" class="btn btn-soft-success btn-sm material-shadow-none"><i
-                            class="ri-add-line align-bottom"></i></button>
+                <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom" aria-label="Hide chat List"
+                    data-bs-original-title="Hide chat List">
+                    <button type="button" class="btn btn-soft-success btn-sm material-shadow-none chat-humburger-button d-lg-none">
+                        <i class="ri-arrow-left-fill"></i>
+                    </button>
                 </div>
             </div>
         </div>

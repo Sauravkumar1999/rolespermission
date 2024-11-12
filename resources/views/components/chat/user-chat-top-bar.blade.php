@@ -2,9 +2,15 @@
     <div class="row align-items-center">
         <div class="col-sm-4 col-8">
             <div class="d-flex align-items-center">
-                <div class="flex-shrink-0 d-block d-lg-none me-3">
-                    <a href="javascript: void(0);" class="user-chat-remove fs-18 p-1"><i
-                            class="ri-arrow-left-s-line align-bottom"></i></a>
+                <div class="flex-shrink-0 d-block me-3">
+                    {{-- <a href="javascript: void(0);" class="user-chat-remove fs-18 p-1"><i
+                            class="ri-arrow-left-s-line align-bottom"></i></a> --}}
+                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom"
+                        aria-label="Hide chat List" data-bs-original-title="Hide chat List">
+                        <button type="button" class="btn btn-soft-success btn-sm material-shadow-none chat-humburger-button">
+                            <i class="ri-arrow-left-fill"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="flex-grow-1 overflow-hidden">
                     <div class="d-flex align-items-center">
@@ -15,7 +21,8 @@
                         </div>
                         <div class="flex-grow-1 overflow-hidden">
                             <h5 class="text-truncate mb-0 fs-16">
-                                <a class="text-reset username" href="{{ route('user.profile') }}">{{ $user->name }}</a>
+                                <a class="text-reset username"
+                                    href="{{ route('user.profile') }}">{{ $user->name }}</a>
                             </h5>
                             <p class="text-truncate text-muted fs-14 mb-0 userStatus">
                                 <small>Offline</small>

@@ -2,7 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "start": "nodemon nodeServer.js"
+        "start": "nodemon nodeServer.js",
+        "dev": "node nodeServer.js"
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",

@@ -8,11 +8,12 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class leftsidebar extends Component
+class LeftSidebar extends Component
 {
     public $users;
     public $user;
     public $chats;
+
     /**
      * Create a new component instance.
      */
@@ -21,6 +22,10 @@ class leftsidebar extends Component
         $this->user = $user;
         $this->users = User::whereNotIn('id', [auth()->user()->id])->orderBy('name')->get(['id', 'profile', 'name']);
         $authUserId = auth()->id();
+
+        if ($user) {
+            $this->ensureChatExists($authUserId, $user->id);
+        }
 
         $this->chats = DirectMessage::where(function ($query) use ($authUserId) {
             $query->where('user_one_id', $authUserId)
@@ -41,6 +46,27 @@ class leftsidebar extends Component
             })
             ->unique('id')
             ->sortByDesc('last_message');
+    }
+
+    /**
+     * Ensure a chat exists between authenticated user and selected user.
+     */
+    protected function ensureChatExists($authUserId, $otherUserId)
+    {
+        $chatExists = DirectMessage::where(function ($query) use ($authUserId, $otherUserId) {
+            $query->where('user_one_id', $authUserId)
+                ->where('user_two_id', $otherUserId);
+        })->orWhere(function ($query) use ($authUserId, $otherUserId) {
+            $query->where('user_one_id', $otherUserId)
+                ->where('user_two_id', $authUserId);
+        })->exists();
+
+        if (!$chatExists) {
+            DirectMessage::insert([
+                'user_one_id' => $authUserId,
+                'user_two_id' => $otherUserId,
+            ]);
+        }
     }
 
     /**

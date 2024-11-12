@@ -35,7 +35,7 @@
     @stack('header')
 </head>
 
-<body class="two-column-menu">
+<body>
     <div id="layout-wrapper">
         <x-header></x-header>
         <x-sidebar></x-sidebar>
